@@ -1,11 +1,13 @@
+using BlogPost.Domain.Primitives;
+
 namespace BlogPost.Domain.Entities;
 
-public class Blog
+public class Post : Entity
 {
-    public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
     public DateOnly PostDate { get; set; }
+    public DateTime LastEdit { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
-    public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
+    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
