@@ -5,7 +5,6 @@ using BlogPost.Application.Tags.Commands.DeleteTag;
 using BlogPost.Application.Tags.Commands.UpdateTag;
 using BlogPost.Application.Tags.Queries.GetTagById;
 using BlogPost.Application.Tags.Queries.GetTags;
-using BlogPost.Domain.Contracts.Tag;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
