@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>BlogPost.Api</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,9 +14,12 @@
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
       <PackageReference Include="MinimalApis.Extensions" Version="0.11.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BlogPost.Application\BlogPost.Application.csproj" />
       <ProjectReference Include="..\BlogPost.Infrastructure\BlogPost.Infrastructure.csproj" />
     </ItemGroup>
 
