@@ -1,5 +1,4 @@
 using BlogPost.Application.Contracts.Tag;
-using BlogPost.Domain.Contracts.Tag;
 using BlogPost.Domain.Entities;
 
 namespace BlogPost.Application.Mapper;
@@ -11,12 +10,13 @@ public static class TagMapperExtension
         return new Tag()
         {
             Name = tagRequest.Name,
+            Color = tagRequest.Color
         };
     }
 
     public static TagResponse ToTagResponse(this Tag tag)
     {
-        return new TagResponse(tag.Id, tag.Name);
+        return new TagResponse(tag.Id, tag.Name, tag.Color);
     }
 
     public static Tag ToEntity(this UpdateTagRequest tagRequest)
@@ -24,6 +24,7 @@ public static class TagMapperExtension
         return new Tag()
         {
             Name = tagRequest.Name,
+            Color = tagRequest.Color
         };
     }
 }
