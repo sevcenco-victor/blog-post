@@ -1,4 +1,4 @@
-using BlogPost.Api.Extensions;
+using BlogPost.Api;
 using BlogPost.Application;
 using FluentValidation;
 
