@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BlogPost.Domain.Entities;
+
 namespace BlogPost.Infrastructure.Configurations;
 
-public class TagConfiguration : IEntityTypeConfiguration<Domain.Entities.Tag>
+public class TagConfiguration : IEntityTypeConfiguration<Tag>
 {
-    public void Configure(EntityTypeBuilder<Domain.Entities.Tag> builder)
+    public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.Property(t => t.Id)
             .UseIdentityColumn();
@@ -16,5 +17,8 @@ public class TagConfiguration : IEntityTypeConfiguration<Domain.Entities.Tag>
 
         builder.HasIndex(t => t.Name)
             .IsUnique();
+
+        builder.Property(t => t.Color)
+            .IsRequired();
     }
 }
