@@ -31,11 +31,12 @@ public class TagRepository : ITagRepository
         return await _dbContext.Tags.ToListAsync();
     }
 
-    public async Task<bool> UpdateAsync(Tag entity, int entityId)
+    public async Task<bool> UpdateAsync(Tag entity)
     {
-        var affectedRows = await _dbContext.Tags.Where(t => t.Id == entityId)
+        var affectedRows = await _dbContext.Tags.Where(t => t.Id == entity.Id)
             .ExecuteUpdateAsync(setters => setters
-                .SetProperty(x => x.Name, entity.Name));
+                .SetProperty(x => x.Name, entity.Name)
+                .SetProperty(x => x.Color, entity.Color));
 
         return affectedRows > 0;
     }
@@ -62,5 +63,10 @@ public class TagRepository : ITagRepository
     public async Task<Tag?> GetByNameAsync(string name)
     {
         return await _dbContext.Tags.FirstOrDefaultAsync(t => t.Name == name);
+    }
+
+    public async Task<bool> IsNameUniqueAsync(string name, int excludedTagId)
+    {
+        return !await _dbContext.Tags.AnyAsync(t => t.Name == name && t.Id != excludedTagId);
     }
 }
