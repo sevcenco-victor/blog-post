@@ -19,7 +19,7 @@ public class PostRepository : IPostRepository
     {
         await _dbContext.Posts.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
-        
+
         return entity.Id;
     }
 
@@ -40,9 +40,9 @@ public class PostRepository : IPostRepository
     }
 
 
-    public async Task<bool> UpdateAsync(Post entity, int entityId)
+    public async Task<bool> UpdateAsync(Post entity)
     {
-        var rowsAffected = await _dbContext.Posts.Where(b => b.Id == entityId)
+        var rowsAffected = await _dbContext.Posts.Where(b => b.Id == entity.Id)
             .ExecuteUpdateAsync(setters =>
                 setters.SetProperty(x => x.Title, entity.Title)
                     .SetProperty(x => x.Text, entity.Text)
