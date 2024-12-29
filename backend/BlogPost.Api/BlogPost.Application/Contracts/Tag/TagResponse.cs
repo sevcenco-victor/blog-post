@@ -1,3 +1,3 @@
-namespace BlogPost.Domain.Contracts.Tag;
+namespace BlogPost.Application.Contracts.Tag;
 
-public record TagResponse(int Id, string Name);
+public record TagResponse(int Id, string Name, string Color);
