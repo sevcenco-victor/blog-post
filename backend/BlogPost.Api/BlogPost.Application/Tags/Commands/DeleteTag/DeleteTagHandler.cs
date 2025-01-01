@@ -1,11 +1,11 @@
-using BlogPost.Application.Exceptions;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Commands.DeleteTag;
 
-public class DeleteTagHandler : IRequestHandler<DeleteTagCommand, Result<bool>>
+public class DeleteTagHandler : IRequestHandler<DeleteTagCommand, Result>
 {
     private readonly ITagRepository _tagRepository;
 
@@ -14,15 +14,14 @@ public class DeleteTagHandler : IRequestHandler<DeleteTagCommand, Result<bool>>
         _tagRepository = tagRepository;
     }
 
-    public async Task<Result<bool>> Handle(DeleteTagCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteTagCommand request, CancellationToken cancellationToken)
     {
         var deleted = await _tagRepository.DeleteAsync(request.Id);
         if (!deleted)
         {
-            var error = new TagNotFoundException($"Tag with id {request.Id} not found");
-            return new Result<bool>(error);
+            return Result.Failure(TagErrors.NotFoundById(request.Id));
         }
 
-        return new Result<bool>(true);
+        return Result.Success();
     }
 }

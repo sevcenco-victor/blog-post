@@ -1,12 +1,11 @@
-using BlogPost.Application.Exceptions;
-using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Commands.UpdateTag;
 
-public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result<bool>>
+public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result>
 {
     private readonly ITagRepository _tagRepository;
 
@@ -15,26 +14,27 @@ public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result<bool>>
         _tagRepository = tagRepository;
     }
 
-    public async Task<Result<bool>> Handle(UpdateTagCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateTagCommand request, CancellationToken cancellationToken)
     {
-        var existingTag = await _tagRepository.GetByIdAsync(request.EntityId);
+        var id = request.EntityId;
+        var (name, color) = request.Entity;
+
+        var existingTag = await _tagRepository.GetByIdAsync(id);
         if (existingTag == null)
         {
-            return new Result<bool>(
-                new TagNotFoundException($"Tag with id {request.EntityId} not found"));
+            return Result.Failure(TagErrors.NotFoundById(id));
         }
 
-        if (!await _tagRepository.IsNameUniqueAsync(request.Entity.Name, existingTag.Id))
+        if (!await _tagRepository.IsNameUniqueAsync(name, existingTag.Id))
         {
-            return new Result<bool>(
-                new TagAlreadyExistsException($"Tag with name {request.Entity.Name} already exists."));
+            return Result.Failure(TagErrors.NameAlreadyExists(name));
         }
 
-        existingTag.Name = request.Entity.Name;
-        existingTag.Color = request.Entity.Color;
+        existingTag.Name = name;
+        existingTag.Color = color;
 
         await _tagRepository.UpdateAsync(existingTag);
 
-        return new Result<bool>(true);
+        return Result.Success();
     }
 }

@@ -1,8 +1,8 @@
-using BlogPost.Application.Exceptions;
+using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
-using BlogPost.Contracts.Post;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPostById;
@@ -15,14 +15,14 @@ public sealed class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Resul
 
     public async Task<Result<PostResponse>> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetByIdAsync(query.Id);
+        var postId = query.Id;
+        var post = await _postRepository.GetByIdAsync(postId);
 
         if (post == null)
         {
-            var error = new PostNotFoundException($"Post with id {query.Id} not found");
-            return new Result<PostResponse>(error);
+            return Result<PostResponse>.Failure(PostErrors.NotFound(postId));
         }
 
-        return post.ToPostResponseDto();
+        return Result<PostResponse>.Success(post.ToPostResponseDto());
     }
 }

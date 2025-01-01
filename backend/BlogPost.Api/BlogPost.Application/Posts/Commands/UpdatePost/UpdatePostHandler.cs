@@ -1,12 +1,12 @@
-using BlogPost.Application.Exceptions;
 using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.UpdatePost;
 
-public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result<bool>>
+public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result>
 {
     private readonly IPostRepository _postRepository;
 
@@ -15,13 +15,14 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result<bool>
         _postRepository = postRepository;
     }
 
-    public async Task<Result<bool>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var existingPost = await _postRepository.GetByIdAsync(request.EntityId);
+        var postId = request.EntityId;
+
+        var existingPost = await _postRepository.GetByIdAsync(postId);
         if (existingPost == null)
         {
-            var error = new PostNotFoundException($"Post with id {request.EntityId} not found");
-            return new Result<bool>(error);
+            return Result.Failure(PostErrors.NotFound(postId));
         }
 
         var mappedPost = request.Post.ToEntity();
@@ -29,6 +30,6 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result<bool>
 
         await _postRepository.UpdateAsync(mappedPost);
 
-        return new Result<bool>(true);
+        return Result.Success();
     }
 }

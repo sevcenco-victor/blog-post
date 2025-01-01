@@ -1,8 +1,8 @@
 using BlogPost.Application.Contracts.Tag;
-using BlogPost.Application.Exceptions;
 using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTagByName;
@@ -18,13 +18,14 @@ public class GetTagByNameHandler : IRequestHandler<GetTagByNameQuery, Result<Tag
 
     public async Task<Result<TagResponse>> Handle(GetTagByNameQuery request, CancellationToken cancellationToken)
     {
-        var tag = await _tagRepository.GetByNameAsync(request.Name);
+        var tagName = request.Name;
+
+        var tag = await _tagRepository.GetByNameAsync(tagName);
         if (tag == null)
         {
-            var error = new TagNotFoundException($"Tag with name {request.Name} does not exist");
-            return new Result<TagResponse>(error);
+            return Result<TagResponse>.Failure(TagErrors.NotFoundByName(tagName));
         }
 
-        return new Result<TagResponse>(tag.ToTagResponse());
+        return Result<TagResponse>.Success(tag.ToTagResponse());
     }
 }

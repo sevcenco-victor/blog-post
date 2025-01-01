@@ -1,11 +1,11 @@
-using BlogPost.Application.Exceptions;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.SetPostTags;
 
-public class SetPostTagsHandler : IRequestHandler<SetPostTagsCommand, Result<bool>>
+public class SetPostTagsHandler : IRequestHandler<SetPostTagsCommand, Result>
 {
     private readonly IPostRepository _postRepository;
     private readonly ITagRepository _tagRepository;
@@ -16,20 +16,20 @@ public class SetPostTagsHandler : IRequestHandler<SetPostTagsCommand, Result<boo
         _tagRepository = tagRepository;
     }
 
-    public async Task<Result<bool>> Handle(SetPostTagsCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SetPostTagsCommand request, CancellationToken cancellationToken)
     {
-        var validPost = await _postRepository.GetByIdAsync(request.PostId);
+        var (postId, tagIds) = request;
+
+        var validPost = await _postRepository.GetByIdAsync(postId);
         if (validPost == null)
         {
-            var error = new PostNotFoundException($"Post with id: {request.PostId} was not found");
-            return new Result<bool>(error);
+            return  Result.Failure(PostErrors.NotFound(postId));
         }
 
-        var validTags = await _tagRepository.GetTagsByIdsAsync(request.TagIds);
-
+        var validTags = await _tagRepository.GetTagsByIdsAsync(tagIds);
 
         await _postRepository.SetTagsAsync(request.PostId, validTags);
 
-        return new Result<bool>(true);
+        return Result.Success();
     }
 }

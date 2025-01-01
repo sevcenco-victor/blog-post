@@ -1,11 +1,11 @@
-using BlogPost.Application.Exceptions;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.DeletePost;
 
-public sealed class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, Result<bool>>
+public sealed class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, Result>
 {
     private readonly IPostRepository _postRepository;
 
@@ -14,15 +14,16 @@ public sealed class DeletePostCommandHandler : IRequestHandler<DeletePostCommand
         _postRepository = postRepository;
     }
 
-    public async Task<Result<bool>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
-        var deleted = await _postRepository.DeleteAsync(request.Id);
+        var postId = request.Id;
+
+        var deleted = await _postRepository.DeleteAsync(postId);
         if (!deleted)
         {
-            var error = new PostNotFoundException($"Post with id: {request.Id} was not found");
-            return new Result<bool>(error);
+            return Result.Failure(PostErrors.NotFound(postId));
         }
 
-        return new Result<bool>(true);
+        return Result.Success();
     }
 }

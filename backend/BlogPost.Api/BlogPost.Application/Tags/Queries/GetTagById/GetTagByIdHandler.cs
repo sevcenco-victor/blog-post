@@ -1,8 +1,8 @@
 using BlogPost.Application.Contracts.Tag;
-using BlogPost.Application.Exceptions;
 using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTagById;
@@ -18,13 +18,14 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagResp
 
     public async Task<Result<TagResponse>> Handle(GetTagByIdQuery request, CancellationToken cancellationToken)
     {
-        var tag = await _tagRepository.GetByIdAsync(request.Id);
+        var tagId = request.Id;
+
+        var tag = await _tagRepository.GetByIdAsync(tagId);
         if (tag == null)
         {
-            var error = new TagNotFoundException($"Tag with id: {request.Id} was not found");
-            return new Result<TagResponse>(error);
+            return Result<TagResponse>.Failure(TagErrors.NotFoundById(tagId));
         }
 
-        return new Result<TagResponse>(tag.ToTagResponse());
+        return Result<TagResponse>.Success(tag.ToTagResponse());
     }
 }

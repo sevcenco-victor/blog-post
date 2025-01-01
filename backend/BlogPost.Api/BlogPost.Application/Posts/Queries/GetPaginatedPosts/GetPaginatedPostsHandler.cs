@@ -1,7 +1,7 @@
+using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
-using BlogPost.Contracts.Post;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPaginatedPosts;
@@ -21,6 +21,6 @@ public class GetPaginatedPostsHandler : IRequestHandler<GetPaginatedPostsQuery, 
         var entities = await _postRepository.GetPaginatedAsync(request.PageNumber, request.PageSize);
         var mappedPosts = entities.Select(p => p.ToPostResponseDto());
 
-        return new Result<IEnumerable<PostResponse>>(mappedPosts);
+        return Result<IEnumerable<PostResponse>>.Success(mappedPosts);
     }
 }

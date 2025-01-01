@@ -1,7 +1,7 @@
 using BlogPost.Application.Contracts.Tag;
 using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
-using LanguageExt.Common;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTags;
@@ -21,6 +21,6 @@ public class GetTagsHandler : IRequestHandler<GetTagsQuery, Result<IEnumerable<T
         var tags = await _tagRepository.GetAllAsync();
         var mappedTags = tags.Select(t => t.ToTagResponse());
 
-        return new Result<IEnumerable<TagResponse>>(mappedTags);
+        return  Result<IEnumerable<TagResponse>>.Success(mappedTags);
     }
 }
