@@ -1,5 +1,5 @@
+using BlogPost.Api.Extensions;
 using BlogPost.Application.Contracts.Tag;
-using BlogPost.Application.Exceptions;
 using BlogPost.Application.Tags.Commands.CreateTag;
 using BlogPost.Application.Tags.Commands.DeleteTag;
 using BlogPost.Application.Tags.Commands.UpdateTag;
@@ -28,10 +28,8 @@ public class TagController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => CreatedAtAction(nameof(Get), new { id = success }, success),
-            error => error is TagAlreadyExistsException
-                ? Conflict(new { Errors = error.Message })
-                : BadRequest(new { Errors = error.Message }));
+            onSuccess: entityId => CreatedAtAction(nameof(Get), new { id = entityId }, entityId),
+            onFailure: _ => result.ToProblemDetails());
     }
 
     [HttpGet("{id:int}")]
@@ -41,10 +39,8 @@ public class TagController : ControllerBase
         var result = await _mediator.Send(query);
 
         return result.Match<IActionResult>(
-            success => Ok(success),
-            error => error is TagNotFoundException
-                ? NotFound(new { Errors = error.Message })
-                : BadRequest(new { Errors = error.Message }));
+            onSuccess: tag => Ok(tag),
+            onFailure: _ => result.ToProblemDetails());
     }
 
     [HttpGet]
@@ -54,11 +50,8 @@ public class TagController : ControllerBase
         var result = await _mediator.Send(query);
 
         return result.Match<IActionResult>(
-            success => Ok(success),
-            error => BadRequest(new
-            {
-                Errors = error.Message
-            }));
+            onSuccess: tagList => Ok(tagList),
+            onFailure: _ => result.ToProblemDetails());
     }
 
 
@@ -69,10 +62,8 @@ public class TagController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => NoContent(),
-            error => error is TagNotFoundException
-                ? NotFound(new { Errors = error.Message })
-                : BadRequest(new { Errors = error.Message }));
+            onSuccess: () => NoContent(),
+            onFailure: _ => result.ToProblemDetails());
     }
 
     [HttpDelete("{id:int}")]
@@ -82,9 +73,7 @@ public class TagController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => NoContent(),
-            error => error is TagNotFoundException
-                ? NotFound(new { Errors = error.Message })
-                : BadRequest(new { Errors = error.Message }));
+            onSuccess: () => NoContent(),
+            onFailure: _ => result.ToProblemDetails());
     }
 }

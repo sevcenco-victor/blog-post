@@ -1,4 +1,4 @@
-using BlogPost.Application.Contracts.Blog;
+using BlogPost.Api.Extensions;
 using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Posts.Commands.CreatePost;
 using BlogPost.Application.Posts.Commands.DeletePost;
@@ -29,8 +29,8 @@ public class PostController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => Ok(success),
-            error => BadRequest(new { Error = error.Message }));
+            onSuccess: postId => Ok(postId),
+            onFailure: _ => result.ToProblemDetails());
     }
 
     [HttpGet("{id:int}")]
@@ -40,22 +40,19 @@ public class PostController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => Ok(success),
-            error => BadRequest(new
-            {
-                Errors = error.Message
-            }));
+            onSuccess: post => Ok(post),
+            onFailure: _ => result.ToProblemDetails());
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var query = new GetPostsQuery();
-        var posts = await _mediator.Send(query);
+        var result = await _mediator.Send(query);
 
-        return posts.Match<IActionResult>(
-            success => Ok(success),
-            error => StatusCode(500, new { Message = "Internal server error", Errors = error.Message }));
+        return result.Match<IActionResult>(
+            onSuccess: postList => Ok(postList),
+            onFailure: _ => result.ToProblemDetails());
     }
 
     [HttpPut("{postId:int}")]
@@ -65,9 +62,8 @@ public class PostController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => Ok(success),
-            error => BadRequest(new { Errors = error.Message })
-        );
+            onSuccess: () => NoContent(),
+            _ => result.ToProblemDetails());
     }
 
     [HttpPatch("set-tags/{id:int}")]
@@ -77,8 +73,8 @@ public class PostController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => Ok(),
-            error => BadRequest(new { Errors = error.Message }));
+            onSuccess: () => NoContent(),
+            onFailure: _ => result.ToProblemDetails());
     }
 
 
@@ -89,7 +85,7 @@ public class PostController : ControllerBase
         var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
-            success => NoContent(),
-            error => BadRequest(new { Errors = error.Message }));
+            onSuccess: () => NoContent(),
+            onFailure: _ => result.ToProblemDetails());
     }
 }
