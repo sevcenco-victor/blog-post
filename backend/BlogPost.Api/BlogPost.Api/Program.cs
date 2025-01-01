@@ -1,15 +1,19 @@
-using BlogPost.Api;
+using BlogPost.Api.Extensions;
 using BlogPost.Application;
-using FluentValidation;
+using BlogPost.Infrastructure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddServices(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddSwaggerGen();
 
@@ -20,6 +24,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 
