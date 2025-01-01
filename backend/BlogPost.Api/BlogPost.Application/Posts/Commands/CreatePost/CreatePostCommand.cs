@@ -1,5 +1,5 @@
 using BlogPost.Application.Contracts.Post;
-using LanguageExt.Common;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.CreatePost;

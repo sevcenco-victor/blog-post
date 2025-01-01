@@ -1,3 +1,3 @@
-namespace BlogPost.Domain.Contracts.Blog;
+namespace BlogPost.Application.Contracts.Post;
 
 public record DeletePostRequest(int Id);

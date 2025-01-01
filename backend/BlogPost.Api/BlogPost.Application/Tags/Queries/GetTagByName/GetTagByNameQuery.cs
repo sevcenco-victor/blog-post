@@ -1,6 +1,5 @@
 using BlogPost.Application.Contracts.Tag;
-using BlogPost.Domain.Entities;
-using LanguageExt.Common;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTagByName;

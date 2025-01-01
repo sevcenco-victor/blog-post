@@ -1,5 +1,5 @@
-using BlogPost.Contracts.Post;
-using LanguageExt.Common;
+using BlogPost.Application.Contracts.Post;
+using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPostById;

@@ -1,6 +1,4 @@
-using BlogPost.Application.Contracts.Blog;
 using BlogPost.Application.Contracts.Post;
-using BlogPost.Contracts.Post;
 using BlogPost.Domain.Entities;
 
 namespace BlogPost.Application.Mapper;

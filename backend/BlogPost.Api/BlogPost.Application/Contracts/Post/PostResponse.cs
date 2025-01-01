@@ -1,5 +1,5 @@
 
-namespace BlogPost.Contracts.Post;
+namespace BlogPost.Application.Contracts.Post;
 
 public record PostResponse(
     int Id,

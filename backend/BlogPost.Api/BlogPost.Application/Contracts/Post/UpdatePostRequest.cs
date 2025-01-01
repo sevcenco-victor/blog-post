@@ -1,4 +1,4 @@
-namespace BlogPost.Application.Contracts.Blog;
+namespace BlogPost.Application.Contracts.Post;
 
 public record UpdatePostRequest(
     string Title,
