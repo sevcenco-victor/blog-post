@@ -1,0 +1,17 @@
+.post-page {
+  display: grid;
+  grid-template-columns: 342px 1fr;
+  column-gap: var(--column-gap);
+}
+
+.section-recent-posts {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--row-gap);
+
+  &__content {
+    display: grid;
+    grid-auto-rows: 432px;
+    row-gap: var(--row-gap);
+  }
+}

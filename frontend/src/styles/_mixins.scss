@@ -1,0 +1,11 @@
+@mixin fluid-text($min, $max) {
+  font-size: clamp(#{$min}px, #{$max / 1440 * 100}vw, #{$max}px);
+}
+
+@mixin span-columns($cols) {
+  grid-column: span $cols;
+}
+
+@mixin span-row($rows) {
+  grid-row: span $rows;
+}

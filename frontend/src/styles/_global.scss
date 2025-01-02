@@ -1,0 +1,62 @@
+@import "mixins";
+body {
+  background-color: var(--background-color);
+}
+
+.app {
+  font-family: var(--font-family), sans-serif;
+  color: var(--font-color);
+}
+
+h1 {
+  @include fluid-text(72, 235);
+}
+
+h2 {
+  @include fluid-text(24, 36);
+}
+
+h3 {
+  @include fluid-text(20, 24);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.page {
+  padding-top: var(--nav-bar-height) !important;
+}
+
+.container {
+  max-width: var(--container-max-width);
+  padding-inline: var(--container-inline-padding);
+  margin: 0 auto;
+}
+
+.badge {
+  font-size: var(--badge-font-size);
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.section {
+  padding-block: var(--section-padding);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--row-gap);
+}
+
+
+.section-hero {
+  &__title-wrapper {
+    border-top: 1px solid var(--color-gray);
+    border-bottom: 1px solid var(--color-gray);
+
+    h1 {
+      line-height: 1.1;
+      text-align: center;
+    }
+  }
+}

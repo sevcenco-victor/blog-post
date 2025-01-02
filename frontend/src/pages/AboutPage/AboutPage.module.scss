@@ -1,0 +1,17 @@
+.section-about-me {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--row-gap);
+  }
+}
+
+.content__item {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+
+  ul {
+    padding-left: 1rem;
+  }
+}
