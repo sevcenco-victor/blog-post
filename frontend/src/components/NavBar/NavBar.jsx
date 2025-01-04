@@ -1,32 +1,33 @@
 import {NavLink} from "react-router-dom";
 import ThemeToggle from "../Toggle/ThemeToggle/ThemeToggle.jsx";
+import PropTypes from "prop-types";
 import styles from './NavBar.module.scss'
 
-const NavBar = ({theme, setTheme}) => {
+const NavBar = ({theme="", setTheme}) => {
     return (
         <nav className={`container ${styles['nav']}`}>
             <h3 className={styles['nav__logo']}>Blog Page</h3>
             <ul className={styles['nav__list']}>
                 <NavLink to='/'
-                         className={({isActive}) => 
+                         className={({isActive}) =>
                              `${styles['nav__item']} 
                              ${isActive ? styles['nav__item--active'] : ''}`}>
                     Blog
                 </NavLink>
                 <NavLink to='projects'
-                         className={({isActive}) => 
+                         className={({isActive}) =>
                              `${styles['nav__item']} 
                              ${isActive ? styles['nav__item--active'] : ''}`}>
                     Projects
                 </NavLink>
                 <NavLink to='about'
-                         className={({isActive}) => 
+                         className={({isActive}) =>
                              `${styles['nav__item']} 
                              ${isActive ? styles['nav__item--active'] : ''}`}>
                     About
                 </NavLink>
                 <NavLink to='newsletter'
-                         className={({isActive}) => 
+                         className={({isActive}) =>
                              `${styles['nav__item']} 
                              ${isActive ? styles['nav__item--active'] : ''}`}>
                     Newsletter
@@ -38,5 +39,10 @@ const NavBar = ({theme, setTheme}) => {
         </nav>
     );
 };
+
+NavBar.propTypes = {
+    theme: PropTypes.string.isRequired,
+    setTheme: PropTypes.func.isRequired,
+}
 
 export default NavBar;

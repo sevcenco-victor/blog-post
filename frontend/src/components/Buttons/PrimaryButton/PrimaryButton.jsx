@@ -1,4 +1,5 @@
 import styles from './PrimaryButton.module.scss';
+import PropTypes from "prop-types";
 
 const PrimaryButton = ({onClick, text}) => {
     return (
@@ -8,4 +9,8 @@ const PrimaryButton = ({onClick, text}) => {
     );
 };
 
+PrimaryButton.propTypes = {
+    onClick: PropTypes.func,
+    text: PropTypes.string,
+}
 export default PrimaryButton;

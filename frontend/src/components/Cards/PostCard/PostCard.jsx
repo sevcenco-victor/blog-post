@@ -24,6 +24,7 @@ const PostCard = ({id, imageUrl = "", postDate, title, text, tagList, orientatio
 PostCard.propTypes = {
     id: PropTypes.number.isRequired,
     imageUrl: PropTypes.string.isRequired,
+    postDate: PropTypes.string.isRequired,
     title: PropTypes.string,
     text: PropTypes.string,
     tagList: PropTypes.arrayOf(PropTypes.object),
