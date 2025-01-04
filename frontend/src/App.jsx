@@ -1,5 +1,5 @@
 import NavBar from "./components/NavBar/NavBar.jsx";
-import MainContent from "./components/MainContent/MainContent.jsx";
+import AppRouter from "./routers/AppRouter/AppRouter.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import {useState} from "react";
 import './styles/styles.css';
@@ -13,7 +13,7 @@ function App() {
         <div className={'app'}>
             <NavBar theme={theme} setTheme={setTheme}/>
             <div className={'container'}>
-                <MainContent/>
+                <AppRouter/>
                 <Footer/>
             </div>
         </div>
