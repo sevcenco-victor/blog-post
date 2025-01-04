@@ -1,7 +1,7 @@
-import styles from './PostPage.module.css'
-import React from "react";
-import PostCard from "src/components/Cards/PostCard/PostCard.jsx";
 import {useParams} from "react-router";
+import PostCard from "src/components/Cards/PostCard/PostCard.jsx";
+import NewsletterSubscription from "src/components/NewsletterSubscription/NewsletterSubscription.jsx";
+import styles from './PostPage.module.css'
 
 const tagList = [
     {name: "Design", color: "#C11574"},
@@ -131,6 +131,9 @@ const PostPage = () => {
                 <p className={'badge'}>post Date</p>
                 <h2>Grid system for better Design User Interface</h2>
                 <img src="https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg" alt="active-post-photo"/>
+                <div className={styles['section-recent-posts__cta']}>
+                    <NewsletterSubscription/>
+                </div>
             </section>
         </div>
     );

@@ -4,28 +4,30 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BlogPost.Infrastructure.Migrations
+namespace BlogPost.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Blogs",
+                name: "Posts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Text = table.Column<string>(type: "text", nullable: false),
-                    PostDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ImageUrl = table.Column<string>(type: "text", nullable: false)
+                    PostDate = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "CURRENT_DATE"),
+                    LastEdit = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
+                    ImageUrl = table.Column<string>(type: "text", nullable: false),
+                    MarkdownFileName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Blogs", x => x.Id);
+                    table.PrimaryKey("PK_Posts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -34,7 +36,8 @@ namespace BlogPost.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Color = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,7 +45,7 @@ namespace BlogPost.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlogTag",
+                name: "PostTag",
                 columns: table => new
                 {
                     BlogsId = table.Column<int>(type: "integer", nullable: false),
@@ -50,15 +53,15 @@ namespace BlogPost.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlogTag", x => new { x.BlogsId, x.TagsId });
+                    table.PrimaryKey("PK_PostTag", x => new { x.BlogsId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_BlogTag_Blogs_BlogsId",
+                        name: "FK_PostTag_Posts_BlogsId",
                         column: x => x.BlogsId,
-                        principalTable: "Blogs",
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BlogTag_Tags_TagsId",
+                        name: "FK_PostTag_Tags_TagsId",
                         column: x => x.TagsId,
                         principalTable: "Tags",
                         principalColumn: "Id",
@@ -66,19 +69,25 @@ namespace BlogPost.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlogTag_TagsId",
-                table: "BlogTag",
+                name: "IX_PostTag_TagsId",
+                table: "PostTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_Name",
+                table: "Tags",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BlogTag");
+                name: "PostTag");
 
             migrationBuilder.DropTable(
-                name: "Blogs");
+                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "Tags");

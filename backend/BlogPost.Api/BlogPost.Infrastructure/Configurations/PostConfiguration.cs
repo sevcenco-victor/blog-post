@@ -26,6 +26,9 @@ public class PostConfiguration : IEntityTypeConfiguration<Domain.Entities.Post>
 
         builder.Property(b => b.ImageUrl)
             .IsRequired();
+        
+        builder.Property(b => b.MarkdownFileName)
+            .IsRequired();
 
         builder.HasMany(b => b.Tags)
             .WithMany(t => t.Blogs);
