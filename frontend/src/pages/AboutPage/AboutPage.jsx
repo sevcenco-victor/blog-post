@@ -2,7 +2,7 @@ import styles from './AboutPage.module.scss';
 
 const AboutPage = () => {
     return (
-        <div className={`page ${styles['about-page']}`}>
+        <div className={`${styles['about-page']}`}>
             <section className={`section section-hero`}>
                 <div className={`section-hero__title-wrapper`}>
                     <h1>MURKIZ</h1>

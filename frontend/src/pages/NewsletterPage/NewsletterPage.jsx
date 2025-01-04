@@ -35,7 +35,7 @@ const postCards = [
 
 const NewsletterPage = () => {
     return (
-        <div className={`page ${styles['newsletter-page']}`}>
+        <div className={`${styles['newsletter-page']}`}>
             <NewsletterSubscription/>
             <section className={`section ${styles['section-recent-posts']}`}>
                 <h2>Recent Blog Posts</h2>

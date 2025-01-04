@@ -13,7 +13,7 @@ const BlogPage = () => {
     }, [pageNum])
 
     return (
-        <div className={`page ${styles["blog-page"]}`}>
+        <div className={`${styles["blog-page"]}`}>
             <section className={`section section-hero`}>
                 <div className={`section-hero__title-wrapper`}>
                     <h1>THE BLOG</h1>
