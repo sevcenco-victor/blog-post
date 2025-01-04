@@ -1,6 +1,9 @@
+using BlogPost.Application.Abstractions;
 using BlogPost.Domain.Abstractions;
+using BlogPost.Infrastructure.ConfigOptions;
 using BlogPost.Infrastructure.Data;
 using BlogPost.Infrastructure.Repositories;
+using BlogPost.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +20,12 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
-        
+
+        services.Configure<GCSConfigOptions>(configuration);
+        services.AddSingleton<ICloudStorageService, CloudStorageService>();
+
+        services.AddSingleton<IFileFactory, FileFactory>();
+
         return services;
     }
 }
