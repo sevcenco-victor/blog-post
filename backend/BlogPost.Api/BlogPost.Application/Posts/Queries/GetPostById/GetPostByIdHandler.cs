@@ -1,3 +1,4 @@
+using BlogPost.Application.Abstractions;
 using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
@@ -7,22 +8,29 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPostById;
 
-public sealed class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Result<PostResponse>>
+public sealed class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Result<DetailedPostResponse>>
 {
     private readonly IPostRepository _postRepository;
+    private readonly ICloudStorageService _cloudStorageService;
 
-    public GetPostByIdHandler(IPostRepository postRepository) => _postRepository = postRepository;
+    public GetPostByIdHandler(IPostRepository postRepository, ICloudStorageService cloudStorageService)
+    {
+        _postRepository = postRepository;
+        _cloudStorageService = cloudStorageService;
+    }
 
-    public async Task<Result<PostResponse>> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<DetailedPostResponse>> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
     {
         var postId = query.Id;
         var post = await _postRepository.GetByIdAsync(postId);
 
         if (post == null)
         {
-            return Result<PostResponse>.Failure(PostErrors.NotFound(postId));
+            return Result<DetailedPostResponse>.Failure(PostErrors.NotFound(postId));
         }
 
-        return Result<PostResponse>.Success(post.ToPostResponseDto());
+        var markdownFileLink = await _cloudStorageService.GetSignedUrlAsync(post.MarkdownFileName);
+
+        return Result<DetailedPostResponse>.Success(post.ToDetailedPostResponseDto(markdownFileLink));
     }
 }

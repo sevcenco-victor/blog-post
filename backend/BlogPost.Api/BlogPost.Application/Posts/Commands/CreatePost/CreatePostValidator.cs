@@ -20,5 +20,13 @@ public sealed class CreatePostValidator : AbstractValidator<CreatePostRequest>
         RuleFor(x => x.ImageUrl)
             .NotEmpty()
             .WithMessage("ImageUrl must be provided");
+
+        RuleFor(x => x.TagIds)
+            .NotEmpty()
+            .WithMessage("Post must have at least one tag");
+
+        RuleFor(x => x.MarkdownFileContent)
+            .NotEmpty()
+            .WithMessage("MarkdownFileContent must not be empty");
     }
 }
