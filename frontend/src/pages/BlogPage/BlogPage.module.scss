@@ -1,4 +1,4 @@
-@import "src/styles/mixins";
+@use "src/styles/mixins" as *;
 
 .section-recent-blog {
   &__content {

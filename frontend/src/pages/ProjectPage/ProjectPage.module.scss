@@ -1,4 +1,4 @@
-@import "src/styles/mixins";
+@use 'src/styles/mixins' as *;
 
 .section-project-list {
   &__content {
@@ -8,8 +8,8 @@
     column-gap: var(--column-gap);
     row-gap: var(--row-gap);
 
-  & :nth-child(3n) {
-    @include span-columns(2);
-  }
+    & :nth-child(3n) {
+      @include span-columns(2);
+    }
   }
 }
