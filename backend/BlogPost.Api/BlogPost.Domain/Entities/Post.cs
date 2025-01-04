@@ -9,5 +9,6 @@ public class Post : Entity
     public DateOnly PostDate { get; set; }
     public DateTime LastEdit { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
+    public string MarkdownFileName { get; set; } = string.Empty;
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
