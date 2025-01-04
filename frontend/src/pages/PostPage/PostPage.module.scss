@@ -15,3 +15,11 @@
     row-gap: var(--row-gap);
   }
 }
+.section-post-details{
+  display: flex;
+  flex-direction: column;
+
+  & img{
+    overflow: hidden;
+  }
+}
