@@ -1,7 +1,12 @@
 import PropTypes from "prop-types";
 import styles from "./FormLabel.module.scss";
+import {ReactNode} from "react";
 
-const FormLabel = ({text = "label", children}) => {
+type FormProps = {
+    text: string;
+    children?: ReactNode;
+}
+const FormLabel = ({text, children}: FormProps) => {
     return (
         <label className={styles['form-label']}>
             <p>{text}</p>

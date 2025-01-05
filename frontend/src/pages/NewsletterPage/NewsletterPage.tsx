@@ -1,6 +1,6 @@
-import PostCard from "src/components/Cards/PostCard/PostCard.jsx";
-import NewsletterSubscription from "src/components/NewsletterSubscription/NewsletterSubscription.jsx";
 import styles from './NewsletterPage.module.scss';
+import NewsletterSubscription from "../../components/NewsletterSubscription/NewsletterSubscription";
+import PostCard from "../../components/Cards/PostCard/PostCard";
 
 //test cases
 const tagList = [
@@ -40,14 +40,16 @@ const NewsletterPage = () => {
             <section className={`section ${styles['section-recent-posts']}`}>
                 <h2>Recent Blog Posts</h2>
                 <div className={styles['section-recent-posts__content']}>
-                    {postCards.map((p, index) => <PostCard key={index}
-                                                           imageUrl={p.imageUrl}
-                                                           title={p.title}
-                                                           text={p.text}
-                                                           postDate={p.postDate}
-                                                           tagList={p.tagList}
-                                                           orientation={p.orientation}
-                    />)}
+                    {postCards.map((p, index) =>
+                        <PostCard key={index}
+                                  id={index}
+                                  imageUrl={p.imageUrl}
+                                  title={p.title}
+                                  text={p.text}
+                                  postDate={p.postDate}
+                                  tagList={p.tagList}
+                                  orientation={'portrait'}
+                        />)}
                 </div>
             </section>
         </div>

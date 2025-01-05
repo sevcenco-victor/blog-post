@@ -1,6 +1,6 @@
-import NavBar from "./components/NavBar/NavBar.jsx";
-import AppRouter from "./routers/AppRouter/AppRouter.jsx";
-import Footer from "./components/Footer/Footer.jsx";
+import NavBar from "./components/NavBar/NavBar";
+import AppRouter from "./routers/AppRouter";
+import Footer from "./components/Footer/Footer";
 import {useState} from "react";
 import './styles/styles.css';
 

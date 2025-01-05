@@ -1,11 +1,12 @@
-import PostCard from "src/components/Cards/PostCard/PostCard.jsx";
-import useAxios from "src/hooks/useAxios.jsx";
-import axiosInstance from "src/apis/axiosInstance.jsx";
+import axiosInstance from "../../apis/axiosInstance";
+import useAxios from "../../hooks/useAxios";
+import PostCard from "../../components/Cards/PostCard/PostCard";
+import {PostResponse} from "../../types/PostResponse";
 import styles from './ProjectPage.module.scss';
 
-const ProjectPage = () => {
 
-    const {response, error, loading} = useAxios({
+const ProjectPage = () => {
+    const {response = [], error, loading} = useAxios<PostResponse[]>({
         axiosInstance,
         url: "/post",
         method: "get",
@@ -29,15 +30,16 @@ const ProjectPage = () => {
                 <h2 className={`section__header`}>Project List</h2>
                 <div className={`section__body ${styles['section-project-list__content']}`}>
                     {
-                        response.map((p) => <PostCard key={p.id}
-                                                      id={p.id}
-                                                      imageUrl={p.imageUrl}
-                                                      postDate={p.postDate}
-                                                      title={p.title}
-                                                      text={p.text}
-                                                      tagList={p.tags}
-                                                      orientation={'vertical'}
-                        />)
+                        response.map((p: PostResponse) =>
+                            <PostCard key={p.id}
+                                      id={p.id}
+                                      imageUrl={p.imageUrl}
+                                      postDate={p.postDate}
+                                      title={p.title}
+                                      text={p.text}
+                                      tagList={p.tagList}
+                                      orientation={"portrait"}
+                            />)
                     }
                 </div>
             </section>

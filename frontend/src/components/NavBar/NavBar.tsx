@@ -1,9 +1,14 @@
+import {ComponentPropsWithoutRef} from "react";
 import {NavLink} from "react-router-dom";
-import ThemeToggle from "../Toggle/ThemeToggle/ThemeToggle.jsx";
-import PropTypes from "prop-types";
+import ThemeToggle from "../Toggle/ThemeToggle/ThemeToggle";
 import styles from './NavBar.module.scss'
 
-const NavBar = ({theme="", setTheme}) => {
+type NavBarProps = ComponentPropsWithoutRef<'nav'> & {
+    theme: string;
+    setTheme: (theme: string) => void;
+}
+
+const NavBar = ({theme = "", setTheme}: NavBarProps) => {
     return (
         <nav className={`container ${styles['nav']}`}>
             <h3 className={styles['nav__logo']}>Blog Page</h3>
@@ -39,10 +44,5 @@ const NavBar = ({theme="", setTheme}) => {
         </nav>
     );
 };
-
-NavBar.propTypes = {
-    theme: PropTypes.string.isRequired,
-    setTheme: PropTypes.func.isRequired,
-}
 
 export default NavBar;

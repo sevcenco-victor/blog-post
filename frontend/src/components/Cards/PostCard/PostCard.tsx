@@ -1,9 +1,19 @@
-import TagBadge from "../../Badges/TagBadge/TagBadge.jsx";
+import TagBadge from "../../Badges/TagBadge/TagBadge";
 import {Link} from "react-router-dom";
+import {Tag} from "../../../types/Tag";
 import styles from './PostCard.module.scss'
-import PropTypes from "prop-types";
 
-const PostCard = ({id, imageUrl = "", postDate, title, text, tagList, orientation = 'landscape'}) => {
+type PostCardProps = {
+    id: number;
+    imageUrl: string;
+    postDate: string;
+    title: string;
+    text: string;
+    tagList?: Tag[];
+    orientation?: "landscape" | "portrait";
+}
+
+const PostCard = ({id, imageUrl, postDate, title, text, tagList, orientation}: PostCardProps) => {
 
     return (
         <Link to={`/post/${id}`} className={`${styles['post']} ${styles[`post--${orientation}`]}`}>
@@ -14,21 +24,13 @@ const PostCard = ({id, imageUrl = "", postDate, title, text, tagList, orientatio
                     <h3 className={styles['post__title']}>{title}</h3>
                     <p className={styles['post__text']}>{text}</p>
                 </div>
-                <div className={styles['post__tag-list']}>
-                    {tagList.map((tag, index) => <TagBadge key={index} name={tag.name} color={tag.color}/>)}
+                {<div className={styles['post__tag-list']}>
+                    {tagList?.map((tag, index) => <TagBadge key={index} name={tag.name} color={tag.color}/>)}
                 </div>
+                }
             </div>
         </Link>
     );
 };
-PostCard.propTypes = {
-    id: PropTypes.number.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-    postDate: PropTypes.string.isRequired,
-    title: PropTypes.string,
-    text: PropTypes.string,
-    tagList: PropTypes.arrayOf(PropTypes.object),
-    orientation: PropTypes.oneOf(['landscape', 'portrait']),
-}
 
 export default PostCard;

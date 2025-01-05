@@ -1,6 +1,7 @@
+import {Tag} from "../../../types/Tag";
 import styles from './TagBadge.module.scss';
 
-const TagBadge = ({name, color}) => {
+const TagBadge = ({name, color}: Tag) => {
     const backgroundStyle = {backgroundColor: color, opacity: 0.1};
     const colorStyle = {color: color};
 

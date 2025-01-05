@@ -1,9 +1,10 @@
-import TextInput from "src/components/Inputs/TextInput/TextInput.jsx";
-import PrimaryButton from "src/components/Buttons/PrimaryButton/PrimaryButton.jsx";
-import styles from "src/pages/NewsletterPage/NewsletterPage.module.scss";
+import TextInput from "../Inputs/TextInput/TextInput";
+import Button from "../Buttons/PrimaryButton/Button";
+import styles from './NewsletterSubscription.module.scss';
 
-const NewsletterSubscription = ({}) => {
-    const handleOnChange = (_) => {
+
+const NewsletterSubscription = () => {
+    const handleOnChange = (_: any) => {
 
     }
     const handleOnClick = () => {
@@ -16,8 +17,8 @@ const NewsletterSubscription = ({}) => {
             <h2>Stories and interviews</h2>
             <p>Subscribe to learn about new product features, the latest in technology, solutions, and updates.</p>
             <div className={styles['section-cta__form']}>
-                <TextInput onChange={handleOnChange} placeholder={'Enter your email'}/>
-                <PrimaryButton text={'Subscribe'} onClick={handleOnClick}/>
+                <TextInput name={'userEmail'} onChange={handleOnChange} placeholder={'Enter your email'}/>
+                <Button text={'Subscribe'} onClick={handleOnClick}/>
                 <p>We care about your data in our <a href="#">privacy policy</a></p>
             </div>
         </div>

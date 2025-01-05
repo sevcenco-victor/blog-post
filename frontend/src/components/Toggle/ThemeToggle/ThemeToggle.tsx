@@ -3,7 +3,11 @@ import {GoSun} from "react-icons/go";
 import {GoMoon} from "react-icons/go";
 import styles from './ThemeToggle.module.scss';
 
-const ThemeToggle = ({theme, setTheme}) => {
+type ThemeToggleProps = {
+    theme: string;
+    setTheme: (theme: string) => void;
+}
+const ThemeToggle = ({theme, setTheme}: ThemeToggleProps) => {
     const [isActive, setIsActive] = useState(theme === 'dark');
 
     const handleToggle = () => {
