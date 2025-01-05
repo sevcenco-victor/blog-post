@@ -1,14 +1,14 @@
-import {Routes, Route} from "react-router";
-import BlogPage from "../../pages/BlogPage/BlogPage.jsx";
-import ProjectPage from "../../pages/ProjectPage/ProjectPage.jsx";
-import AboutPage from "../../pages/AboutPage/AboutPage.jsx";
-import NewsletterPage from "../../pages/NewsletterPage/NewsletterPage.jsx";
-import PostPage from "src/pages/PostPage/PostPage.jsx";
-import AdminPage from "src/pages/Admin/AdminPage/AdminPage.jsx";
-import AdminPostPage from "src/pages/Admin/AdminPostPage/AdminPostPage.jsx";
-import AppLayout from "src/layouts/AppLayout/AppLayout.jsx";
-import AdminLayout from "src/layouts/AdminLayout/AdminLayout.jsx";
-import AdminTagPage from "src/pages/Admin/AdminTagPage/AdminTagPage.jsx";
+import {Routes, Route} from "react-router-dom";
+import BlogPage from "../pages/BlogPage/BlogPage";
+import PostPage from "../pages/PostPage/PostPage";
+import AboutPage from "../pages/AboutPage/AboutPage";
+import NewsletterPage from "../pages/NewsletterPage/NewsletterPage";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout";
+import AdminPage from "../pages/(is-logged)/(is-admin)/AdminPage/AdminPage";
+import AdminPostPage from "../pages/(is-logged)/(is-admin)/AdminPostPage/AdminPostPage";
+import AdminTagPage from "../pages/(is-logged)/(is-admin)/AdminTagPage/AdminTagPage";
+import AppLayout from "../layouts/AppLayout/AppLayout";
+import ProjectPage from "../pages/ProjectPage/ProjectPage";
 
 const AppRouter = () => {
     return (
