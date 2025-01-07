@@ -1,17 +1,11 @@
-import {ComponentPropsWithoutRef} from "react";
-import {NavLink} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import ThemeToggle from "../Toggle/ThemeToggle/ThemeToggle";
 import styles from './NavBar.module.scss'
 
-type NavBarProps = ComponentPropsWithoutRef<'nav'> & {
-    theme: string;
-    setTheme: (theme: string) => void;
-}
-
-const NavBar = ({theme = "", setTheme}: NavBarProps) => {
+const NavBar = () => {
     return (
         <nav className={`container ${styles['nav']}`}>
-            <h3 className={styles['nav__logo']}>Blog Page</h3>
+            <Link to={"/"}><h3 className={styles['nav__logo']}>Blog Page</h3></Link>
             <ul className={styles['nav__list']}>
                 <NavLink to='/'
                          className={({isActive}) =>
@@ -38,7 +32,7 @@ const NavBar = ({theme = "", setTheme}: NavBarProps) => {
                     Newsletter
                 </NavLink>
                 <li>
-                    <ThemeToggle theme={theme} setTheme={setTheme}/>
+                    <ThemeToggle/>
                 </li>
             </ul>
         </nav>
