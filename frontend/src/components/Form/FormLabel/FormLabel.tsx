@@ -1,6 +1,5 @@
-import PropTypes from "prop-types";
-import styles from "./FormLabel.module.scss";
 import {ReactNode} from "react";
+import styles from "./FormLabel.module.scss";
 
 type FormProps = {
     text: string;
@@ -14,10 +13,5 @@ const FormLabel = ({text, children}: FormProps) => {
         </label>
     );
 };
-
-FormLabel.propTypes = {
-    text: PropTypes.string.isRequired,
-    children: PropTypes.element.isRequired,
-}
 
 export default FormLabel;
