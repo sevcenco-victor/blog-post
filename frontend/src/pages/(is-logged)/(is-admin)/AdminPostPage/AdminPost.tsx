@@ -1,17 +1,17 @@
-import {ChangeEvent, SyntheticEvent, useEffect, useState} from 'react';
+import {ChangeEvent, FormEvent, FormEventHandler, SyntheticEvent, useEffect, useState} from 'react';
 import {TabContext, TabList, TabPanel} from '@mui/lab'
 import {Tab} from '@mui/material';
-import MdEditor from 'react-markdown-editor-lite';
-import MarkdownIt from 'markdown-it';
-import FormLabel from "../../../../components/Form/FormLabel/FormLabel";
-import TextInput from "../../../../components/Inputs/TextInput/TextInput";
-import Button from "../../../../components/Buttons/PrimaryButton/Button";
-import PostCard from "../../../../components/Cards/PostCard/PostCard";
+import MDEditor from '@uiw/react-md-editor';
 import {mockPosts} from "../../../../mock/mockPosts";
-import styles from './AdminPostPage.module.scss'
+import FormLabel from '../../../../components/Form/FormLabel';
+import TextInput from "../../../../components/Inputs/TextInput";
+import Button from "../../../../components/Button";
+import PostCard from "../../../../components/Cards/PostCard";
+import styles from './AdminPost.module.scss'
 
 const AddPost = () => {
-    const mdParser = new MarkdownIt();
+    const [content, setContent] = useState("your blog body goes here");
+
     const [form, setForm] = useState({
         title: '',
         text: '',
@@ -28,19 +28,9 @@ const AddPost = () => {
         }));
     }
 
-    const handleMdEditorChange = (text: string, name: string) => {
-        return {
-            target: {
-                value: text,
-                name: name
-            }
-        } as ChangeEvent<HTMLInputElement>;
-    }
-
-    const handleFormSubmit = (e: any) => {
+    const handleFormSubmit = (e: FormEvent<FormEventHandler>) => {
         e.preventDefault();
-
-        console.log('Submit add form')
+        console.log('Submit add form', form)
     }
     return (
         <form method='POST' className={styles['form-add']}>
@@ -57,10 +47,12 @@ const AddPost = () => {
                            placeholder={'Thumbnail of the post ex: https://dog-with-hat.jpg'}/>
             </FormLabel>
 
-            <MdEditor style={{height: '500px'}} renderHTML={text => mdParser.render(text)}
-                      onChange={({text}) => handleMdEditorChange(text, "markdownFileContent")}/>
+            <MDEditor value={content}
+                      onChange={setContent}
+            />
 
-            <Button text={'Add Post'} onClick={() => console.log("Add Post")}/>
+            <Button text={'Add Post'} type={'submit'} onClick={() => {
+            }}/>
         </form>
     )
 }
@@ -94,7 +86,7 @@ const GetPosts = () => {
                         title={post.title}
                         text={post.text}
                         imageUrl={post.imageUrl}
-                        tagList={post.tagList}
+                        tags={post.tagList}
                         orientation={'portrait'}
                     />)}
             </div>
@@ -102,7 +94,7 @@ const GetPosts = () => {
     );
 }
 
-const AdminPostPage = () => {
+const AdminPost = () => {
     const [value, setValue] = useState('1');
     const handleChange = (newValue: string) => {
         setValue(newValue);
@@ -126,4 +118,4 @@ const AdminPostPage = () => {
     );
 };
 
-export default AdminPostPage;
+export default AdminPost;
