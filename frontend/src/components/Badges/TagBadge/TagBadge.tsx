@@ -1,4 +1,4 @@
-import {Tag} from "../../../types/Tag";
+import {Tag} from "../../../types";
 import styles from './TagBadge.module.scss';
 
 const TagBadge = ({name, color}: Tag) => {
@@ -8,7 +8,7 @@ const TagBadge = ({name, color}: Tag) => {
     return (
         <div className={styles['tag-badge']}>
             <div className={styles['tag-badge__bg']}>
-                <div className={styles['tag-badge__bg--mask']} style={backgroundStyle}></div>
+                <div className={styles['tag-badge__bg--mask']} style={backgroundStyle}/>
             </div>
             <div className={styles['tag-badge__name']} style={colorStyle}>{name}</div>
         </div>

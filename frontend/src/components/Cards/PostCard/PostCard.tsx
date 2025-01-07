@@ -1,6 +1,6 @@
-import TagBadge from "../../Badges/TagBadge/TagBadge";
 import {Link} from "react-router-dom";
-import {Tag} from "../../../types/Tag";
+import TagBadge from "../../Badges/TagBadge";
+import {Tag} from "../../../types";
 import styles from './PostCard.module.scss'
 
 type PostCardProps = {
@@ -9,11 +9,11 @@ type PostCardProps = {
     postDate: string;
     title: string;
     text: string;
-    tagList?: Tag[];
+    tags?: Tag[];
     orientation?: "landscape" | "portrait";
 }
 
-const PostCard = ({id, imageUrl, postDate, title, text, tagList, orientation}: PostCardProps) => {
+const PostCard = ({id, imageUrl, postDate, title, text, tags, orientation = "landscape"}: PostCardProps) => {
 
     return (
         <Link to={`/post/${id}`} className={`${styles['post']} ${styles[`post--${orientation}`]}`}>
@@ -25,7 +25,9 @@ const PostCard = ({id, imageUrl, postDate, title, text, tagList, orientation}: P
                     <p className={styles['post__text']}>{text}</p>
                 </div>
                 {<div className={styles['post__tag-list']}>
-                    {tagList?.map((tag, index) => <TagBadge key={index} name={tag.name} color={tag.color}/>)}
+                    {tags?.map((tag) =>
+                        <TagBadge key={`post-${id}-tags-${tag.id}`} name={tag.name} color={tag.color}/>
+                    )}
                 </div>
                 }
             </div>
