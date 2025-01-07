@@ -64,6 +64,7 @@ public class PostRepository : IPostRepository
     {
         var skip = pageSize * (pageNum - 1);
         return await _dbContext.Posts
+            .Include<Post, ICollection<Tag>>(p => p.Tags)
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync();
@@ -71,7 +72,7 @@ public class PostRepository : IPostRepository
 
     public async Task<Post> GetByPostDateAsync(DateOnly date)
     {
-        return await _dbContext.Posts.FirstAsync<Post>(b => b.PostDate == date);
+        return await _dbContext.Posts.FirstAsync(b => b.PostDate == date);
     }
 
     public async Task SetTagsAsync(int postId, IEnumerable<Tag> tags)
@@ -85,5 +86,18 @@ public class PostRepository : IPostRepository
         }
 
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Post>> GetLatestAsync(int? requestNum)
+    {
+        var take = requestNum ?? 10;
+
+        var posts = await _dbContext.Posts
+            .Include<Post, ICollection<Tag>>(b => b.Tags)
+            .OrderByDescending(p => p.PostDate)
+            .Take(take)
+            .ToListAsync();
+
+        return posts;
     }
 }
