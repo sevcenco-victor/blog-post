@@ -1,4 +1,4 @@
-const AdminPage = () => {
+const Admin = () => {
     return (
         <div>
             <section>
@@ -8,4 +8,4 @@ const AdminPage = () => {
     );
 };
 
-export default AdminPage;
+export default Admin;

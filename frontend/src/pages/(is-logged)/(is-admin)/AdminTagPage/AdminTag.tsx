@@ -1,10 +1,10 @@
 import useAxios from "../../../../hooks/useAxios";
-import axiosInstance from "../../../../apis/axiosInstance";
-import Button from "../../../../components/Buttons/PrimaryButton/Button";
-import {Tag} from "../../../../types/Tag";
-import styles from './AdminTagPage.module.scss';
+import axiosInstance from "../../../../apis/axiosInstance.ts";
+import Button from "../../../../components/Button/Button";
+import {Tag} from "../../../../types/tag.ts";
+import styles from './AdminTag.module.scss';
 
-const AdminTagPage = () => {
+const AdminTag = () => {
     const {response = [], error, loading, refetch} = useAxios<Tag[]>({
         axiosInstance,
         method: "get",
@@ -25,4 +25,4 @@ const AdminTagPage = () => {
     );
 };
 
-export default AdminTagPage;
+export default AdminTag;
