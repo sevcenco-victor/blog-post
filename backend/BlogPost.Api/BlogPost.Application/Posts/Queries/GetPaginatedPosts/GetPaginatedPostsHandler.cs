@@ -18,6 +18,12 @@ public class GetPaginatedPostsHandler : IRequestHandler<GetPaginatedPostsQuery, 
     public async Task<Result<IEnumerable<PostResponse>>> Handle(GetPaginatedPostsQuery request,
         CancellationToken cancellationToken)
     {
+        if (request.PageNumber <= 0 || request.PageSize <= 0)
+        {
+            return Result<IEnumerable<PostResponse>>.Failure(Error.Failure("Post.Pagination",
+                "PageNumber and PageSize must be greater than 0"));
+        }
+
         var entities = await _postRepository.GetPaginatedAsync(request.PageNumber, request.PageSize);
         var mappedPosts = entities.Select(p => p.ToPostResponseDto());
 

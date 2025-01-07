@@ -1,0 +1,51 @@
+@use "src/styles/mixins" as *;
+
+.section-recent-blog {
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, 200px);
+    column-gap: var(--column-gap);
+    row-gap: var(--row-gap);
+
+    & > :nth-child(1) {
+      @include span-row(2);
+    }
+  }
+}
+
+.section-hero {
+  padding-top: var(--nav-bar-height) !important;
+
+  &__title-wrapper {
+    border-top: 1px solid var(--color-gray);
+    border-bottom: 1px solid var(--color-gray);
+
+    h1 {
+      line-height: 1.1;
+      text-align: center;
+    }
+  }
+}
+
+.section-random-blog {
+  &__content {
+    height: 246px;
+  }
+}
+
+.section-all-blogs {
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 444px);
+    column-gap: var(--column-gap);
+    row-gap: var(--row-gap);
+  }
+}
+
+.pagination {
+  ul {
+    justify-content: center;
+  }
+}

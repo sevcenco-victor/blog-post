@@ -4,6 +4,8 @@ using BlogPost.Application.Posts.Commands.CreatePost;
 using BlogPost.Application.Posts.Commands.DeletePost;
 using BlogPost.Application.Posts.Commands.SetPostTags;
 using BlogPost.Application.Posts.Commands.UpdatePost;
+using BlogPost.Application.Posts.Queries.GetLatestPosts;
+using BlogPost.Application.Posts.Queries.GetPaginatedPosts;
 using BlogPost.Application.Posts.Queries.GetPostById;
 using BlogPost.Application.Posts.Queries.GetPosts;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +50,28 @@ public class PostController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var query = new GetPostsQuery();
+        var result = await _mediator.Send(query);
+
+        return result.Match<IActionResult>(
+            onSuccess: postList => Ok(postList),
+            onFailure: _ => result.ToProblemDetails());
+    }
+
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetAllPaginated(int pageSize, int pageNumber)
+    {
+        var query = new GetPaginatedPostsQuery(pageSize, pageNumber);
+        var result = await _mediator.Send(query);
+
+        return result.Match<IActionResult>(
+            onSuccess: postList => Ok(postList),
+            onFailure: _ => result.ToProblemDetails());
+    }
+
+    [HttpGet("latest")]
+    public async Task<IActionResult> GetLatest(int? num)
+    {
+        var query = new GetLatestPostsQuery(num);
         var result = await _mediator.Send(query);
 
         return result.Match<IActionResult>(
