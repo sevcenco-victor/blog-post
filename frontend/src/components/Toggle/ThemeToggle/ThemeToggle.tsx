@@ -1,23 +1,17 @@
-import {useState} from "react";
 import {GoSun} from "react-icons/go";
 import {GoMoon} from "react-icons/go";
+import {useThemeStore} from "../../../stores/useThemeStore.ts";
 import styles from './ThemeToggle.module.scss';
 
-type ThemeToggleProps = {
-    theme: string;
-    setTheme: (theme: string) => void;
-}
-const ThemeToggle = ({theme, setTheme}: ThemeToggleProps) => {
-    const [isActive, setIsActive] = useState(theme === 'dark');
-
-    const handleToggle = () => {
-        setTheme(!isActive ? 'dark' : 'light');
-        setIsActive(!isActive);
-    }
+const ThemeToggle = () => {
+    const isDarkTheme = useThemeStore((state) => state.isDark);
+    const toggleTheme = useThemeStore((state) => state.switchTheme);
 
     return (
-        <div onClick={() => handleToggle()}
-             className={`${styles['toggle']} ${isActive ? styles['toggle--is-active'] : ''}`}>
+        <div onClick={toggleTheme}
+             role="button"
+             aria-label={`Switch to ${isDarkTheme ? 'light' : 'dark'} theme`}
+             className={`${styles['toggle']} ${isDarkTheme ? styles['toggle--is-active'] : ''}`}>
             <GoSun className={styles['toggle__sun']}/>
             <GoMoon className={styles['toggle__moon']}/>
         </div>

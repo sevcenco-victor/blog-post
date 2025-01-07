@@ -1,17 +1,15 @@
 import NavBar from "./components/NavBar/NavBar";
 import AppRouter from "./routers/AppRouter";
 import Footer from "./components/Footer/Footer";
-import {useState} from "react";
-import './styles/styles.css';
+import {useThemeStore} from "./stores/useThemeStore";
 
 function App() {
-    const userPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const [theme, setTheme] = useState(userPreference ? "dark" : "light");
-    document.documentElement.setAttribute("data-theme", theme);
+    const isDarkTheme = useThemeStore((state) => state.isDark);
+    document.documentElement.setAttribute("data-theme", isDarkTheme ? "dark" : "light");
 
     return (
         <div className={'app'}>
-            <NavBar theme={theme} setTheme={setTheme}/>
+            <NavBar/>
             <div className={'container'}>
                 <AppRouter/>
                 <Footer/>
