@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {TagBadge} from '@components';
 import {TagTypes} from "@/types";
-import {formatPostDate} from "@/utils/formatPostDate";
+import {formatDate} from "@/utils/formatDate.ts";
 import styles from './PostCard.module.scss'
 
 type PostCardProps = {
@@ -16,7 +16,7 @@ type PostCardProps = {
 
 export const PostCard = ({id, imageUrl, postDate, title, text, tags, orientation = "landscape"}: PostCardProps) => {
     const atLeastOneTag: boolean = tags != undefined && tags.length > 0;
-    const formatedDate = formatPostDate(postDate);
+    const formatedDate = formatDate(postDate);
     const orientationStyle = orientation === "landscape" ? styles.landscape : styles.portrait;
 
     return (
