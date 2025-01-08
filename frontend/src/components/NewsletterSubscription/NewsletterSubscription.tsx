@@ -1,11 +1,11 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
-import TextInput from "../Inputs/TextInput";
-import Button from "../Button";
+import {Button} from "@components";
+import {TextInput} from "@components/Inputs";
 import styles from './NewsletterSubscription.module.scss';
 
 
-const NewsletterSubscription = () => {
+export const NewsletterSubscription = () => {
     const [userEmail, setUserEmail] = useState("");
 
     const handleOnClick = () => {
@@ -13,12 +13,12 @@ const NewsletterSubscription = () => {
     }
 
     return (
-        <div className={styles['subscription']}>
-            <p className={`badge ${styles['subscription__badge']}`}>Newsletter</p>
-            <h2 className={`${styles['subscription__header']}`}>Stories and interviews</h2>
-            <p className={`${styles['subscription__description']}`}>Subscribe to learn about new product features, the
+        <div className={styles.subscription}>
+            <p className={`badge ${styles.badge}`}>Newsletter</p>
+            <h2 className={styles.header}>Stories and interviews</h2>
+            <p className={`${styles.description}`}>Subscribe to learn about new product features, the
                 latest in technology, solutions, and updates.</p>
-            <div className={styles['subscription__form']}>
+            <div className={styles.form}>
                 <TextInput name={'userEmail'} onChange={(e) => setUserEmail(e.target.value)}
                            placeholder={'Enter your email'}/>
                 <Button text={'Subscribe'} onClick={handleOnClick}/>
