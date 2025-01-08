@@ -1,17 +1,17 @@
-import NavBar from "./components/NavBar/NavBar";
-import AppRouter from "./routers/AppRouter";
-import Footer from "./components/Footer/Footer";
+import AppRoutes from "./routes/AppRoutes.tsx";
 import {useThemeStore} from "./stores/useThemeStore";
+import {NavBar, Footer} from "@components/navigation";
+import {ThemeTypes} from "./types";
 
 function App() {
-    const isDarkTheme = useThemeStore((state) => state.isDark);
-    document.documentElement.setAttribute("data-theme", isDarkTheme ? "dark" : "light");
+    const currTheme: ThemeTypes = useThemeStore((state) => state.theme);
+    document.documentElement.setAttribute("data-theme", currTheme);
 
     return (
         <div className={'app'}>
             <NavBar/>
             <div className={'container'}>
-                <AppRouter/>
+                <AppRoutes/>
                 <Footer/>
             </div>
         </div>
