@@ -1,11 +1,20 @@
 import {create} from 'zustand';
-import {Theme} from "../types";
+import {ThemeTypes, ThemeStore} from "@/types";
 
-const userPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-export const useThemeStore = create<Theme>((set) => {
+let pickedTheme: ThemeTypes = localStorage.getItem('theme') as ThemeTypes;
+
+if (!pickedTheme) {
+    pickedTheme = window.matchMedia("(prefers-color-scheme:dark)").matches ? 'dark' : 'light';
+}
+
+export const useThemeStore = create<ThemeStore>((set) => {
     return {
-        isDark: userPreference,
-        switchTheme: () => set((state) => ({isDark: !state.isDark})),
+        theme: pickedTheme,
+        switchTheme: () => set((state) => {
+            const newTheme = state.theme === "dark" ? "light" : "dark";
+            localStorage.setItem("theme", newTheme);
+            return {theme: newTheme};
+        }),
     };
 });

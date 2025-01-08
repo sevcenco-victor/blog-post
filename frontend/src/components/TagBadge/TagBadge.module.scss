@@ -1,0 +1,33 @@
+.tagBadge {
+  display: inline-block;
+  padding: 2px 10px;
+  position: relative;
+  width: fit-content;
+
+  .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    
+    border-radius: 1rem;
+    background-color: white;
+
+    .mask {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+  .name {
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+  }
+}

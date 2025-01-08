@@ -1,3 +1,14 @@
+@use '../../styles/mixins' as *;
+
+.loaderBg {
+  --max-page-cols: 3;
+
+  @include span-columns(var(--max-page-cols));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .loader {
   width: 30px;
   aspect-ratio: 1;

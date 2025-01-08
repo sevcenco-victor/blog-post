@@ -1,0 +1,131 @@
+@use '../../../styles/media' as m;
+
+.nav {
+  background-color: var(--navbar-background-color);
+  backdrop-filter: blur(5px);
+  height: var(--nav-bar-height);
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 20px;
+  gap: 1rem;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+
+  .list {
+    display: flex;
+    column-gap: 14px;
+    align-items: center;
+
+    list-style: none;
+
+    @include m.mobile {
+      display: none;
+    }
+    @include m.tablet {
+      column-gap: 8px;
+    }
+  }
+
+  .navItem {
+    padding: 8px;
+    position: relative;
+
+    .active {
+      text-shadow: 1px 0 0 currentColor;
+    }
+  }
+
+  .navItem:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    height: 1px;
+    background-color: var(--font-color);
+    width: 0;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+  }
+
+  .navItem:hover {
+    text-shadow: 1px 0 0 currentColor;
+  }
+
+  .navItem:hover:after,
+  .activeLink:after {
+    width: 100%;
+  }
+
+  .burger {
+    background-color: transparent;
+    border: none;
+    color: var(--font-color);
+    font-size: 32px;
+    height: 32px;
+
+    @include m.mobile-above {
+      display: none;
+    }
+  }
+
+  .mobileList {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+
+    .navLogo {
+      padding-bottom: 34px;
+    }
+
+    .closeBtn {
+      position: absolute;
+      background-color: transparent;
+      width: 100%;
+      bottom: 0;
+      z-index: 99;
+      padding-block: 1rem;
+      height: min-content;
+      text-align: center;
+      color: var(--font-color);
+      font-size: 32px;
+      border: none;
+      border-top: 1px solid var(--font-color);
+    }
+  }
+
+  .dialog[open] {
+    width: 100%;
+    height: 100%;
+    color: var(--font-color);
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    &:modal {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .dialog {
+    height: 100dvh;
+  }
+
+}

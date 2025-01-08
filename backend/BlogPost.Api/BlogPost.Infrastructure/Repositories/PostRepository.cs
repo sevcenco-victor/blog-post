@@ -100,4 +100,9 @@ public class PostRepository : IPostRepository
 
         return posts;
     }
+
+    public async Task<int> GetPostCountAsync()
+    {
+        return await _dbContext.Posts.CountAsync();
+    }
 }

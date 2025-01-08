@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance.ts";
-import {DetailedPost, Post} from "../types";
+import {DetailedPost, Post} from "@/types";
 
 type PostRequest = {
     title: string,
@@ -9,7 +9,7 @@ type PostRequest = {
     tagIds: number[]
 }
 
-export const getPosts = async (pageSize = 10, pageNum = 1): Promise<Post[]> => {
+export const getPosts = async (pageNum = 1, pageSize = 10): Promise<Post[]> => {
     const response = await axiosInstance.get<Post[]>(`/post/paginated`, {
         params: {pageSize: pageSize, pageNumber: pageNum},
     });
@@ -23,6 +23,10 @@ export const getLatestPosts = async (num: number): Promise<Post[]> => {
     const response = await axiosInstance.get<Post[]>(`/Post/latest`, {
         params: {num: num}
     });
+    return response.data;
+}
+export const getPostsQuantity = async (): Promise<number> => {
+    const response = await axiosInstance.get(`/post/qty`);
     return response.data;
 }
 

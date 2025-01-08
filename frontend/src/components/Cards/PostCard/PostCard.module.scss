@@ -5,21 +5,18 @@
 
   column-gap: var(--column-gap);
   row-gap: var(--row-gap);
-  //background-color: var(--post-card-bg);
-  //border: var(--post-card-border);
-  //border-radius: 12px;
 
-  transition: all 0.2s ease;
+  transition: all 0.05s ease;
 
   &:hover {
-    //transform: skew(-1deg);
+    transform: scale(1.02);
   }
 
   &:hover &__image-wrapper {
-    //border-radius: 85px 10px 10px 10px;
+    border-radius: 85px 10px 10px 10px;
   }
 
-  &__image-wrapper {
+  .imageWrapper {
     transition: all 0.5s ease;
 
     width: 100%;
@@ -28,42 +25,35 @@
     overflow: hidden;
   }
 
-  &__wrapper {
+  .wrapper {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    justify-content: space-between;
   }
 
-  &__content-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  &__post-text {
+  .contentWrapper {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
-  &__text {
+  .text {
     color: var(--color-subtext);
   }
 
-  &__tag-list {
+  .tagList {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
   }
+}
 
-  &--landscape {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.landscape {
+  grid-template-columns: repeat(2, 1fr);
+}
 
-  &--portrait {
-    flex-direction: column;
-    grid-template-rows: repeat(2, 1fr);
-  }
+.portrait {
+  flex-direction: column;
+  grid-template-rows: repeat(2, auto);
 }
 

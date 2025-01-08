@@ -1,3 +1,5 @@
+@use '../../styles/media' as m;
+
 .subscription {
   display: flex;
   flex-direction: column;
@@ -5,21 +7,25 @@
   justify-content: center;
   text-align: center;
 
-  &__badge {
+  .badge {
     padding-bottom: 12px;
   }
 
-  &__header {
+  .header {
     padding-bottom: 24px;
   }
 
-  &__description {
+  .description {
     font-size: 20px;
     max-width: 636px;
     padding-bottom: 40px;
+
+    @include m.mobile{
+      font-size: 1rem;
+    }
   }
 
-  &__form {
+  .form {
     display: grid;
     grid-template-columns: auto auto;
     row-gap: 0.5rem;
@@ -27,6 +33,12 @@
 
     & a {
       text-decoration: underline;
+    }
+
+    @include m.mobile {
+      grid-template-columns: auto;
+      grid-template-rows: auto;
+      row-gap: 1rem;
     }
   }
 }
