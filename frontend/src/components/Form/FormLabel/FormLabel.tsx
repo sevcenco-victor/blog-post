@@ -5,9 +5,9 @@ type FormProps = {
     text: string;
     children?: ReactNode;
 }
-const FormLabel = ({text, children}: FormProps) => {
+export const FormLabel = ({text, children}: FormProps) => {
     return (
-        <label className={styles['form-label']}>
+        <label className={styles.formLabel}>
             <p>{text}</p>
             {children}
         </label>

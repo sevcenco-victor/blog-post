@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
-import TagBadge from "../../Badges/TagBadge";
-import {Tag} from "../../../types";
+import {TagBadge} from '@components';
+import {TagTypes} from "@/types";
+import {formatPostDate} from "@/utils/formatPostDate";
 import styles from './PostCard.module.scss'
 
 type PostCardProps = {
@@ -9,26 +10,30 @@ type PostCardProps = {
     postDate: string;
     title: string;
     text: string;
-    tags?: Tag[];
+    tags?: TagTypes[];
     orientation?: "landscape" | "portrait";
 }
 
-const PostCard = ({id, imageUrl, postDate, title, text, tags, orientation = "landscape"}: PostCardProps) => {
+export const PostCard = ({id, imageUrl, postDate, title, text, tags, orientation = "landscape"}: PostCardProps) => {
+    const atLeastOneTag: boolean = tags != undefined && tags.length > 0;
+    const formatedDate = formatPostDate(postDate);
+    const orientationStyle = orientation === "landscape" ? styles.landscape : styles.portrait;
 
     return (
-        <Link to={`/post/${id}`} className={`${styles['post']} ${styles[`post--${orientation}`]}`}>
-            <img src={imageUrl} alt="post-image" className={styles['post__image-wrapper']} loading="lazy"/>
-            <div className={styles['post__wrapper']}>
-                <div className={`${styles['post__post-text']}`}>
-                    <p className={`badge ${styles['post__post-date']}`}>{postDate}</p>
-                    <h3 className={styles['post__title']}>{title}</h3>
-                    <p className={styles['post__text']}>{text}</p>
+        <Link to={`/post/${id}`} className={`${styles.post} ${orientationStyle}`}>
+            <img src={imageUrl} alt="post-image" className={styles.imageWrapper} loading="lazy"/>
+            <div className={styles.wrapper}>
+                <div className={`${styles.contentWrapper}`}>
+                    <p className={`badge`}>{formatedDate}</p>
+                    <h3>{title}</h3>
+                    <p className={styles.text}>{text}</p>
                 </div>
-                {<div className={styles['post__tag-list']}>
-                    {tags?.map((tag) =>
-                        <TagBadge key={`post-${id}-tags-${tag.id}`} name={tag.name} color={tag.color}/>
-                    )}
-                </div>
+                {atLeastOneTag &&
+                    <div className={styles.tagList}>
+                        {tags!.map((tag) =>
+                            <TagBadge key={`post-${id}-tags-${tag.id}`} tag={tag}/>
+                        )}
+                    </div>
                 }
             </div>
         </Link>
