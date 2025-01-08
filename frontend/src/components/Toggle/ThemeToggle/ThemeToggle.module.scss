@@ -7,15 +7,15 @@
 
   transition: background-color 0.4s;
 
-  &__sun path {
+  .sun path {
     fill: var(--background-color);
   }
 
-  &__moon path {
+  .moon path {
     fill: var(--background-color);
   }
+}
 
-  &--is-active {
-    flex-direction: row-reverse;
-  }
+.active {
+  flex-direction: row-reverse;
 }
