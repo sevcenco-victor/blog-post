@@ -7,6 +7,7 @@ using BlogPost.Application.Posts.Commands.UpdatePost;
 using BlogPost.Application.Posts.Queries.GetLatestPosts;
 using BlogPost.Application.Posts.Queries.GetPaginatedPosts;
 using BlogPost.Application.Posts.Queries.GetPostById;
+using BlogPost.Application.Posts.Queries.GetPostQty;
 using BlogPost.Application.Posts.Queries.GetPosts;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
@@ -54,6 +55,17 @@ public class PostController : ControllerBase
 
         return result.Match<IActionResult>(
             onSuccess: postList => Ok(postList),
+            onFailure: _ => result.ToProblemDetails());
+    }
+
+    [HttpGet("qty")]
+    public async Task<IActionResult> GetQuantity()
+    {
+        var query = new GetPostQtyQuery();
+        var result = await _mediator.Send(query);
+
+        return result.Match<IActionResult>(
+            onSuccess: qty => Ok(qty),
             onFailure: _ => result.ToProblemDetails());
     }
 

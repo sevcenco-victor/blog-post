@@ -8,4 +8,5 @@ public interface IPostRepository : IRepository<int, Post>
     Task<Post> GetByPostDateAsync(DateOnly date);
     Task SetTagsAsync(int postId, IEnumerable<Entities.Tag> tags);
     Task<IEnumerable<Post>> GetLatestAsync(int? requestNum);
+    Task<int> GetPostCountAsync();
 }
