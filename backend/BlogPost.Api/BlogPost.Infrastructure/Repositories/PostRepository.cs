@@ -60,11 +60,26 @@ public class PostRepository : IPostRepository
         return affectedRows > 0;
     }
 
-    public async Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize)
+    public async Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize, string? title, int[]? tagIds)
     {
+        var query = _dbContext.Posts
+            .Include(p => p.Tags)
+            .AsQueryable();
+        
+        if (tagIds != null)
+        {
+            query = query
+                .Where(p => tagIds.All(tagId => p.Tags.Select(tag => tag.Id).Contains(tagId)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            query = query.Where(b => b.Title.ToLower().Contains(title.ToLower()));
+        }
+
+
         var skip = pageSize * (pageNum - 1);
-        return await _dbContext.Posts
-            .Include<Post, ICollection<Tag>>(p => p.Tags)
+        return await query
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync();

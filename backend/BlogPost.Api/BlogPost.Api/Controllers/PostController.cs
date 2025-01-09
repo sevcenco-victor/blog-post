@@ -70,9 +70,9 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("paginated")]
-    public async Task<IActionResult> GetAllPaginated(int pageSize, int pageNumber)
+    public async Task<IActionResult> GetAllPaginated([FromQuery] PaginationFilter paginationFilter)
     {
-        var query = new GetPaginatedPostsQuery(pageSize, pageNumber);
+        var query = new GetPaginatedPostsQuery(paginationFilter);
         var result = await _mediator.Send(query);
 
         return result.Match<IActionResult>(
