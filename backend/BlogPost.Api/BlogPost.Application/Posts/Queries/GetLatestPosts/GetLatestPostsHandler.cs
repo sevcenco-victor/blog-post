@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BlogPost.Application.Posts.Queries.GetLatestPosts;
 
-public class GetLatestPostsHandler : IRequestHandler<GetLatestPostsQuery, Result<IEnumerable<PostResponse>>>
+public sealed class GetLatestPostsHandler : IRequestHandler<GetLatestPostsQuery, Result<IEnumerable<PostResponse>>>
 {
     private readonly IPostRepository _postRepository;
     private readonly ILogger<GetLatestPostsHandler> _logger;
@@ -28,7 +28,7 @@ public class GetLatestPostsHandler : IRequestHandler<GetLatestPostsQuery, Result
                 "Number must be greater than 0"));
         }
 
-        var posts = await _postRepository.GetLatestAsync(request.Num);
+        var posts = await _postRepository.GetLatestAsync(request.Num, cancellationToken);
         var mappedPosts = posts.Select(p => p.ToPostResponseDto());
 
         return Result<IEnumerable<PostResponse>>.Success(mappedPosts);

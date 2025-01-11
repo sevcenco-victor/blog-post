@@ -22,10 +22,10 @@ public class TagController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] CreateTagRequest request)
+    public async Task<IActionResult> Add([FromBody] CreateTagRequest request, CancellationToken cancellationToken)
     {
         var command = new CreateTagCommand(request);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: entityId => CreatedAtAction(nameof(Get), new { id = entityId }, entityId),
@@ -33,10 +33,10 @@ public class TagController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
     {
         var query = new GetTagByIdQuery(id);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: tag => Ok(tag),
@@ -44,10 +44,10 @@ public class TagController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var query = new GetTagsQuery();
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: tagList => Ok(tagList),
@@ -56,10 +56,11 @@ public class TagController : ControllerBase
 
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateTagRequest request)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateTagRequest request,
+        CancellationToken cancellationToken)
     {
         var command = new UpdateTagCommand(id, request);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: () => NoContent(),
@@ -67,10 +68,10 @@ public class TagController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteTagCommand(id);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: () => NoContent(),

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogPost.Infrastructure.Data;
 
-public class BlogDbContext(DbContextOptions<BlogDbContext> options)
+public sealed class BlogDbContext(DbContextOptions<BlogDbContext> options)
     : DbContext(options)
 {
     public DbSet<Post> Posts => Set<Post>();

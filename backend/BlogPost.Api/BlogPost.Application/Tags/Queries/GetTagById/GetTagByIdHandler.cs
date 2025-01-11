@@ -20,12 +20,10 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagResp
     {
         var tagId = request.Id;
 
-        var tag = await _tagRepository.GetByIdAsync(tagId);
-        if (tag == null)
-        {
-            return Result<TagResponse>.Failure(TagErrors.NotFoundById(tagId));
-        }
-
-        return Result<TagResponse>.Success(tag.ToTagResponse());
+        var tag = await _tagRepository.GetByIdAsync(tagId, cancellationToken);
+       
+        return tag is null
+            ? Result<TagResponse>.Failure(TagErrors.NotFoundById(tagId))
+            : Result<TagResponse>.Success(tag.ToTagResponse());
     }
 }

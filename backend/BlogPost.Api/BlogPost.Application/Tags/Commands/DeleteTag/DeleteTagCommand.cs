@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BlogPost.Application.Tags.Commands.DeleteTag;
 
-public record DeleteTagCommand(int Id) : IRequest<Result>;
+public sealed record DeleteTagCommand(int Id) : IRequest<Result>;

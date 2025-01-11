@@ -16,12 +16,10 @@ public class DeleteTagHandler : IRequestHandler<DeleteTagCommand, Result>
 
     public async Task<Result> Handle(DeleteTagCommand request, CancellationToken cancellationToken)
     {
-        var deleted = await _tagRepository.DeleteAsync(request.Id);
-        if (!deleted)
-        {
-            return Result.Failure(TagErrors.NotFoundById(request.Id));
-        }
+        var deleted = await _tagRepository.DeleteAsync(request.Id, cancellationToken);
 
-        return Result.Success();
+        return deleted
+            ? Result.Success()
+            : Result.Failure(TagErrors.NotFoundById(request.Id));
     }
 }

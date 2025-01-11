@@ -7,7 +7,7 @@ using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTagByName;
 
-public class GetTagByNameHandler : IRequestHandler<GetTagByNameQuery, Result<TagResponse>>
+public sealed class GetTagByNameHandler : IRequestHandler<GetTagByNameQuery, Result<TagResponse>>
 {
     private readonly ITagRepository _tagRepository;
 
@@ -20,12 +20,10 @@ public class GetTagByNameHandler : IRequestHandler<GetTagByNameQuery, Result<Tag
     {
         var tagName = request.Name;
 
-        var tag = await _tagRepository.GetByNameAsync(tagName);
-        if (tag == null)
-        {
-            return Result<TagResponse>.Failure(TagErrors.NotFoundByName(tagName));
-        }
-
-        return Result<TagResponse>.Success(tag.ToTagResponse());
+        var tag = await _tagRepository.GetByNameAsync(tagName, cancellationToken);
+       
+        return tag is null
+            ? Result<TagResponse>.Failure(TagErrors.NotFoundByName(tagName))
+            : Result<TagResponse>.Success(tag.ToTagResponse());
     }
 }

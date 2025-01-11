@@ -7,7 +7,7 @@ using MediatR;
 
 namespace BlogPost.Application.Tags.Commands.CreateTag;
 
-public class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<int>>
+public sealed class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<int>>
 {
     private readonly ITagRepository _tagRepository;
     private readonly ILogger<CreateTagHandler> _logger;
@@ -22,7 +22,7 @@ public class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<int>>
     {
         var (name, color) = request.Entity;
 
-        var existingTag = await _tagRepository.GetByNameAsync(name);
+        var existingTag = await _tagRepository.GetByNameAsync(name, cancellationToken);
 
         if (existingTag != null)
         {
@@ -32,7 +32,7 @@ public class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<int>>
 
         var tag = new Tag { Name = name, Color = color };
         _logger.LogDebug("Creating tag to database...");
-        var entityId = await _tagRepository.CreateAsync(tag);
+        var entityId = await _tagRepository.CreateAsync(tag, cancellationToken);
 
         _logger.LogInformation("Tag with Id: {Id} added successfully to database", entityId);
 

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.UpdatePost;
 
-public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result>
+public sealed class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result>
 {
     private readonly IPostRepository _postRepository;
 
@@ -19,7 +19,7 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result>
     {
         var postId = request.EntityId;
 
-        var existingPost = await _postRepository.GetByIdAsync(postId);
+        var existingPost = await _postRepository.GetByIdAsync(postId, cancellationToken);
         if (existingPost == null)
         {
             return Result.Failure(PostErrors.NotFound(postId));
@@ -28,7 +28,7 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Result>
         var mappedPost = request.Post.ToEntity();
         mappedPost.Id = existingPost.Id;
 
-        await _postRepository.UpdateAsync(mappedPost);
+        await _postRepository.UpdateAsync(mappedPost, cancellationToken);
 
         return Result.Success();
     }

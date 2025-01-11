@@ -26,7 +26,7 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreatePostRequest request)
+    public async Task<IActionResult> Create([FromBody] CreatePostRequest request, CancellationToken cancellationToken)
     {
         var command = new CreatePostCommand(request);
         var result = await _mediator.Send(command);
@@ -37,10 +37,10 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
     {
         var command = new GetPostByIdQuery(id);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: post => Ok(post),
@@ -48,10 +48,10 @@ public class PostController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var query = new GetPostsQuery();
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: postList => Ok(postList),
@@ -59,10 +59,10 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("qty")]
-    public async Task<IActionResult> GetQuantity()
+    public async Task<IActionResult> GetQuantity(CancellationToken cancellationToken)
     {
         var query = new GetPostQtyQuery();
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: qty => Ok(qty),
@@ -70,10 +70,11 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("paginated")]
-    public async Task<IActionResult> GetAllPaginated([FromQuery] PaginationFilter paginationFilter)
+    public async Task<IActionResult> GetAllPaginated([FromQuery] PaginationFilter paginationFilter,
+        CancellationToken cancellationToken)
     {
         var query = new GetPaginatedPostsQuery(paginationFilter);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: postList => Ok(postList),
@@ -81,7 +82,7 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("latest")]
-    public async Task<IActionResult> GetLatest(int? num)
+    public async Task<IActionResult> GetLatest(int? num, CancellationToken cancellationToken)
     {
         var query = new GetLatestPostsQuery(num);
         var result = await _mediator.Send(query);
@@ -92,7 +93,8 @@ public class PostController : ControllerBase
     }
 
     [HttpPut("{postId:int}")]
-    public async Task<IActionResult> Update(int postId, [FromBody] UpdatePostRequest request)
+    public async Task<IActionResult> Update(int postId, [FromBody] UpdatePostRequest request,
+        CancellationToken cancellationToken)
     {
         var command = new UpdatePostCommand(postId, request);
         var result = await _mediator.Send(command);
@@ -103,10 +105,11 @@ public class PostController : ControllerBase
     }
 
     [HttpPatch("set-tags/{id:int}")]
-    public async Task<IActionResult> AddTags(int id, [FromBody] IEnumerable<int> tagIds)
+    public async Task<IActionResult> AddTags(int id, [FromBody] IEnumerable<int> tagIds,
+        CancellationToken cancellationToken)
     {
         var command = new SetPostTagsCommand(id, tagIds);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: () => NoContent(),
@@ -115,10 +118,10 @@ public class PostController : ControllerBase
 
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeletePostCommand(id);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: () => NoContent(),
