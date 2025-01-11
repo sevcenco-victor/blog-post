@@ -26,6 +26,7 @@ public class PostRepository : IPostRepository
     public async Task<Post?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         var post = await _dbContext.Posts
+            .AsNoTracking()
             .Include<Post, ICollection<Tag>>(p => p.Tags)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
@@ -35,19 +36,21 @@ public class PostRepository : IPostRepository
     public async Task<IEnumerable<Post>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _dbContext.Posts
+            .AsNoTracking()
             .Include<Post, ICollection<Tag>>(b => b.Tags)
             .ToListAsync(cancellationToken);
     }
 
-
     public async Task<bool> UpdateAsync(Post entity, CancellationToken cancellationToken)
     {
-        var rowsAffected = await _dbContext.Posts.Where(b => b.Id == entity.Id)
+        var rowsAffected = await _dbContext.Posts
+            .Where(b => b.Id == entity.Id)
             .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(x => x.Title, entity.Title)
-                    .SetProperty(x => x.Text, entity.Text)
-                    .SetProperty(x => x.LastEdit, entity.LastEdit)
-                    .SetProperty(x => x.ImageUrl, entity.ImageUrl), cancellationToken);
+                    setters.SetProperty(x => x.Title, entity.Title)
+                        .SetProperty(x => x.Text, entity.Text)
+                        .SetProperty(x => x.LastEdit, entity.LastEdit)
+                        .SetProperty(x => x.ImageUrl, entity.ImageUrl),
+                cancellationToken);
 
         return rowsAffected > 0;
     }
@@ -65,6 +68,7 @@ public class PostRepository : IPostRepository
         CancellationToken cancellationToken)
     {
         var query = _dbContext.Posts
+            .AsNoTracking()
             .Include(p => p.Tags)
             .AsQueryable();
 
@@ -88,12 +92,16 @@ public class PostRepository : IPostRepository
 
     public async Task<Post> GetByPostDateAsync(DateOnly date, CancellationToken cancellationToken)
     {
-        return await _dbContext.Posts.FirstAsync(b => b.PostDate == date, cancellationToken);
+        return await _dbContext.Posts
+            .AsNoTracking()
+            .FirstAsync(b => b.PostDate == date, cancellationToken);
     }
 
     public async Task SetTagsAsync(int postId, IEnumerable<Tag> tags, CancellationToken cancellationToken)
     {
-        var post = await GetByIdAsync(postId, cancellationToken);
+        var post = await _dbContext.Posts
+            .Include(p => p.Tags)
+            .FirstOrDefaultAsync(p => p.Id == postId, cancellationToken);
 
         post?.Tags.Clear();
         foreach (var tag in tags)
@@ -109,6 +117,7 @@ public class PostRepository : IPostRepository
         var take = requestNum ?? 10;
 
         var posts = await _dbContext.Posts
+            .AsNoTracking()
             .Include<Post, ICollection<Tag>>(b => b.Tags)
             .OrderByDescending(p => p.PostDate)
             .Take(take)
@@ -119,6 +128,8 @@ public class PostRepository : IPostRepository
 
     public async Task<int> GetPostCountAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Posts.CountAsync(cancellationToken);
+        return await _dbContext.Posts
+            .AsNoTracking()
+            .CountAsync(cancellationToken);
     }
 }

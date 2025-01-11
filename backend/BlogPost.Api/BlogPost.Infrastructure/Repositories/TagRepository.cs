@@ -23,12 +23,16 @@ public class TagRepository : ITagRepository
 
     public async Task<Tag?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Tags.FindAsync(id, cancellationToken);
+        return await _dbContext.Tags
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Tag>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Tags.ToListAsync(cancellationToken);
+        return await _dbContext.Tags
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> UpdateAsync(Tag entity, CancellationToken cancellationToken)
@@ -56,6 +60,7 @@ public class TagRepository : ITagRepository
         var uniqueTagIds = new HashSet<int>(tagIds);
 
         var tagEntities = await _dbContext.Tags
+            .AsNoTracking()
             .Where(t => uniqueTagIds.Contains(t.Id))
             .ToListAsync(cancellationToken);
 
@@ -64,12 +69,15 @@ public class TagRepository : ITagRepository
 
     public async Task<Tag?> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
-        return await _dbContext.Tags.FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
+        return await _dbContext.Tags
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
     }
 
     public async Task<bool> IsNameUniqueAsync(string name, int excludedTagId, CancellationToken cancellationToken)
     {
         return !await _dbContext.Tags
+            .AsNoTracking()
             .AnyAsync(t => t.Name == name && t.Id != excludedTagId, cancellationToken);
     }
 }
