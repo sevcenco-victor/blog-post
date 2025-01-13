@@ -34,7 +34,6 @@ public class JwtTokenService : IJwtTokenService
             issuer: _configuration.GetValue<string>("JWTSettings:Issuer"),
             audience: _configuration.GetValue<string>("JWTSettings:Audience"),
             claims: claims,
-            
             expires: DateTime.UtcNow.AddMinutes(10),
             signingCredentials: credentials
         );
@@ -48,10 +47,5 @@ public class JwtTokenService : IJwtTokenService
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(range);
         return Convert.ToBase64String(range);
-    }
-
-    public bool ValidateToken(string token)
-    {
-        throw new NotImplementedException();
     }
 }

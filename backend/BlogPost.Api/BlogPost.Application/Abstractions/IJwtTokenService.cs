@@ -7,5 +7,4 @@ public interface IJwtTokenService
 {
     string GenerateToken(User user);
     string GenerateRefreshToken(User user);
-    bool ValidateToken(string token);
 }
