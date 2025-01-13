@@ -4,7 +4,7 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPostQty;
 
-public class GetPostQtyHandler : IRequestHandler<GetPostQtyQuery, Result<int>>
+public sealed class GetPostQtyHandler : IRequestHandler<GetPostQtyQuery, Result<int>>
 {
     private readonly IPostRepository _postRepository;
 
@@ -15,7 +15,7 @@ public class GetPostQtyHandler : IRequestHandler<GetPostQtyQuery, Result<int>>
 
     public async Task<Result<int>> Handle(GetPostQtyQuery request, CancellationToken cancellationToken)
     {
-        var qty = await _postRepository.GetPostCountAsync();
+        var qty = await _postRepository.GetPostCountAsync(cancellationToken);
         return Result<int>.Success(qty);
     }
 }

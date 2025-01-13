@@ -18,12 +18,10 @@ public sealed class DeletePostCommandHandler : IRequestHandler<DeletePostCommand
     {
         var postId = request.Id;
 
-        var deleted = await _postRepository.DeleteAsync(postId);
-        if (!deleted)
-        {
-            return Result.Failure(PostErrors.NotFound(postId));
-        }
+        var deleted = await _postRepository.DeleteAsync(postId, cancellationToken);
 
-        return Result.Success();
+        return deleted
+            ? Result.Success()
+            : Result.Failure(PostErrors.NotFoundById(postId));
     }
 }

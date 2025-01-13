@@ -1,5 +1,6 @@
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Entities;
+using BlogPost.Domain.Tags;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,94 +16,121 @@ public class PostRepository : IPostRepository
     }
 
 
-    public async Task<int> CreateAsync(Post entity)
+    public async Task<int> CreateAsync(Post entity, CancellationToken cancellationToken)
     {
-        await _dbContext.Posts.AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.Posts.AddAsync(entity, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
     }
 
-    public async Task<Post?> GetByIdAsync(int id)
+    public async Task<Post?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         var post = await _dbContext.Posts
+            .AsNoTracking()
             .Include<Post, ICollection<Tag>>(p => p.Tags)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return post;
     }
 
-    public async Task<IEnumerable<Post>> GetAllAsync()
+    public async Task<IEnumerable<Post>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _dbContext.Posts
+            .AsNoTracking()
             .Include<Post, ICollection<Tag>>(b => b.Tags)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-
-    public async Task<bool> UpdateAsync(Post entity)
+    public async Task<bool> UpdateAsync(Post entity, CancellationToken cancellationToken)
     {
-        var rowsAffected = await _dbContext.Posts.Where(b => b.Id == entity.Id)
+        var rowsAffected = await _dbContext.Posts
+            .Where(b => b.Id == entity.Id)
             .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(x => x.Title, entity.Title)
-                    .SetProperty(x => x.Text, entity.Text)
-                    .SetProperty(x => x.LastEdit, entity.LastEdit)
-                    .SetProperty(x => x.ImageUrl, entity.ImageUrl));
+                    setters.SetProperty(x => x.Title, entity.Title)
+                        .SetProperty(x => x.Text, entity.Text)
+                        .SetProperty(x => x.LastEdit, entity.LastEdit)
+                        .SetProperty(x => x.ImageUrl, entity.ImageUrl),
+                cancellationToken);
 
         return rowsAffected > 0;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken)
     {
-        var affectedRows = await _dbContext.Posts.Where(b => b.Id == id)
-            .ExecuteDeleteAsync();
+        var affectedRows = await _dbContext.Posts
+            .Where(b => b.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
 
         return affectedRows > 0;
     }
 
-    public async Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize)
+    public async Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize, string? title, int[]? tagIds,
+        CancellationToken cancellationToken)
     {
-        var skip = pageSize * (pageNum - 1);
-        return await _dbContext.Posts
-            .Include<Post, ICollection<Tag>>(p => p.Tags)
-            .Skip(skip)
-            .Take(pageSize)
-            .ToListAsync();
-    }
+        var query = _dbContext.Posts
+            .AsNoTracking()
+            .Include(p => p.Tags)
+            .AsQueryable();
 
-    public async Task<Post> GetByPostDateAsync(DateOnly date)
-    {
-        return await _dbContext.Posts.FirstAsync(b => b.PostDate == date);
-    }
-
-    public async Task SetTagsAsync(int postId, IEnumerable<Tag> tags)
-    {
-        var post = await GetByIdAsync(postId);
-
-        post!.Tags.Clear();
-        foreach (var tag in tags)
+        if (tagIds != null)
         {
-            post.Tags.Add(tag);
+            query = query
+                .Where(p => tagIds.All(tagId => p.Tags.Select(tag => tag.Id).Contains(tagId)));
         }
 
-        await _dbContext.SaveChangesAsync();
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            query = query.Where(b => b.Title.ToLower().Contains(title.ToLower()));
+        }
+
+        var skip = pageSize * (pageNum - 1);
+        return await query
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Post>> GetLatestAsync(int? requestNum)
+    public async Task<Post> GetByPostDateAsync(DateOnly date, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Posts
+            .AsNoTracking()
+            .FirstAsync(b => b.PostDate == date, cancellationToken);
+    }
+
+    public async Task SetTagsAsync(int postId, IEnumerable<Tag> tags, CancellationToken cancellationToken)
+    {
+        var post = await _dbContext.Posts
+            .Include(p => p.Tags)
+            .FirstOrDefaultAsync(p => p.Id == postId, cancellationToken);
+
+        post?.Tags.Clear();
+        foreach (var tag in tags)
+        {
+            post?.Tags.Add(tag);
+        }
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<Post>> GetLatestAsync(int? requestNum, CancellationToken cancellationToken)
     {
         var take = requestNum ?? 10;
 
         var posts = await _dbContext.Posts
+            .AsNoTracking()
             .Include<Post, ICollection<Tag>>(b => b.Tags)
             .OrderByDescending(p => p.PostDate)
             .Take(take)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return posts;
     }
 
-    public async Task<int> GetPostCountAsync()
+    public async Task<int> GetPostCountAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Posts.CountAsync();
+        return await _dbContext.Posts
+            .AsNoTracking()
+            .CountAsync(cancellationToken);
     }
 }

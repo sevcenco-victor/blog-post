@@ -21,47 +21,48 @@ public class CloudStorageService : ICloudStorageService
         _credential = GoogleCredential.FromFile(_options.Value.GCPStorageAuthFile);
     }
 
-    public async Task<string> GetSignedUrlAsync(string fileNameToRead, int timeOutInMinutes = 30)
+    public async Task<string> GetSignedUrlAsync(string fileNameToRead, int timeOutInMinutes,
+        CancellationToken cancellationToken)
     {
         var bucketName = _options.Value.GCSBucketName;
 
         var sac = _credential.UnderlyingCredential as ServiceAccountCredential;
         var urlSigner = UrlSigner.FromCredential(sac);
-        var signedUrl = await urlSigner.SignAsync(bucketName, fileNameToRead, TimeSpan.FromMinutes(timeOutInMinutes));
-        _logger.LogInformation("SignedUrl: {signedUrl}", signedUrl);
+        var signedUrl = await urlSigner.SignAsync(bucketName, fileNameToRead, TimeSpan.FromMinutes(timeOutInMinutes),
+            cancellationToken: cancellationToken);
 
         return signedUrl;
     }
 
-    public async Task<string> UploadFileAsync(IFormFile fileToUpload)
+    public async Task<string> UploadFileAsync(IFormFile fileToUpload, CancellationToken cancellationToken)
     {
         var bucketName = _options.Value.GCSBucketName;
         var fileName = fileToUpload.FileName;
 
         _logger.LogInformation("Uploading file {fileName} to bucket {bucketName}", fileName, bucketName);
         using var stream = new MemoryStream();
-        await fileToUpload.CopyToAsync(stream);
-        
+        await fileToUpload.CopyToAsync(stream, cancellationToken);
+
         stream.Position = 0;
 
         using var storageClient = await StorageClient.CreateAsync(_credential);
 
         var uploadedFile = await storageClient.UploadObjectAsync(bucketName, fileName,
-            fileToUpload.ContentType, stream);
+            fileToUpload.ContentType, stream, cancellationToken: cancellationToken);
         _logger.LogInformation("Uploaded: file {fileName} to bucket {bucketName}", fileName, bucketName);
 
 
         return uploadedFile.MediaLink;
     }
 
-    public async Task DeleteFileAsync(string fileNameToDelete)
+    public async Task DeleteFileAsync(string fileNameToDelete, CancellationToken cancellationToken)
     {
         var bucketName = _options.Value.GCSBucketName;
 
         _logger.LogInformation("Deleting file {fileNameToDelete}", fileNameToDelete);
         using var storageClient = await StorageClient.CreateAsync(_credential);
 
-        await storageClient.DeleteObjectAsync(bucketName, fileNameToDelete);
+        await storageClient.DeleteObjectAsync(bucketName, fileNameToDelete, cancellationToken: cancellationToken);
         _logger.LogInformation("Deleted file {fileNameToDelete}", fileNameToDelete);
     }
 }

@@ -1,4 +1,4 @@
-using BlogPost.Application.Contracts.Tag;
+using BlogPost.Application.Tags.Common;
 using BlogPost.Domain.Primitives;
 using MediatR;
 

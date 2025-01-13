@@ -4,4 +4,4 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetLatestPosts;
 
-public record GetLatestPostsQuery(int? Num) : IRequest<Result<IEnumerable<PostResponse>>>;
+public sealed record GetLatestPostsQuery(int? Num) : IRequest<Result<IEnumerable<PostResponse>>>;

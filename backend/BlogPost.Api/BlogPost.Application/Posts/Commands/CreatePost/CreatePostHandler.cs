@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BlogPost.Application.Posts.Commands.CreatePost;
 
-public class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<int>>
+public sealed class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<int>>
 {
     private readonly IPostRepository _postRepository;
     private readonly ITagRepository _tagRepository;
@@ -36,7 +36,7 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<int>>
 
     public async Task<Result<int>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request.Post,cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request.Post, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -49,15 +49,15 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<int>>
         }
 
         var post = request.Post;
-        var selectedTags = (await _tagRepository.GetTagsByIdsAsync(post.TagIds)).ToList();
+        var selectedTags = (await _tagRepository.GetTagsByIdsAsync(post.TagIds, cancellationToken)).ToList();
 
         var markdownFileName = FileNameGenerator.GenerateMarkDownFileName(post.Title);
         var markdownFile = _fileFactory.CreateInMemoryFile(post.MarkdownFileContent, markdownFileName);
 
-        await _cloudStorageService.UploadFileAsync(markdownFile);
+        await _cloudStorageService.UploadFileAsync(markdownFile, cancellationToken);
 
         var mappedEntity = post.ToEntity(selectedTags, markdownFileName);
-        var createdEntityId = await _postRepository.CreateAsync(mappedEntity);
+        var createdEntityId = await _postRepository.CreateAsync(mappedEntity, cancellationToken);
 
         _logger.LogInformation("Post created successfully with ID: {Id}", createdEntityId);
         return Result<int>.Success(createdEntityId);

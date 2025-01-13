@@ -1,5 +1,6 @@
 using BlogPost.Application.Contracts.Tag;
 using BlogPost.Application.Mapper;
+using BlogPost.Application.Tags.Common;
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Primitives;
 using MediatR;
@@ -18,7 +19,7 @@ public class GetTagsHandler : IRequestHandler<GetTagsQuery, Result<IEnumerable<T
     public async Task<Result<IEnumerable<TagResponse>>> Handle(GetTagsQuery request,
         CancellationToken cancellationToken)
     {
-        var tags = await _tagRepository.GetAllAsync();
+        var tags = await _tagRepository.GetAllAsync(cancellationToken);
         var mappedTags = tags.Select(t => t.ToTagResponse());
 
         return  Result<IEnumerable<TagResponse>>.Success(mappedTags);

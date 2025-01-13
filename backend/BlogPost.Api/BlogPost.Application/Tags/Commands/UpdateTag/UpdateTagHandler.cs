@@ -19,13 +19,13 @@ public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result>
         var id = request.EntityId;
         var (name, color) = request.Entity;
 
-        var existingTag = await _tagRepository.GetByIdAsync(id);
+        var existingTag = await _tagRepository.GetByIdAsync(id, cancellationToken);
         if (existingTag == null)
         {
             return Result.Failure(TagErrors.NotFoundById(id));
         }
 
-        if (!await _tagRepository.IsNameUniqueAsync(name, existingTag.Id))
+        if (!await _tagRepository.IsNameUniqueAsync(name, existingTag.Id, cancellationToken))
         {
             return Result.Failure(TagErrors.NameAlreadyExists(name));
         }
@@ -33,7 +33,7 @@ public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result>
         existingTag.Name = name;
         existingTag.Color = color;
 
-        await _tagRepository.UpdateAsync(existingTag);
+        await _tagRepository.UpdateAsync(existingTag, cancellationToken);
 
         return Result.Success();
     }

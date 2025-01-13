@@ -22,14 +22,15 @@ public sealed class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Resul
     public async Task<Result<DetailedPostResponse>> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
     {
         var postId = query.Id;
-        var post = await _postRepository.GetByIdAsync(postId);
+        var post = await _postRepository.GetByIdAsync(postId,cancellationToken);
 
         if (post == null)
         {
-            return Result<DetailedPostResponse>.Failure(PostErrors.NotFound(postId));
+            return Result<DetailedPostResponse>.Failure(PostErrors.NotFoundById(postId));
         }
 
-        var markdownFileLink = await _cloudStorageService.GetSignedUrlAsync(post.MarkdownFileName);
+        var markdownFileLink =
+            await _cloudStorageService.GetSignedUrlAsync(post.MarkdownFileName, cancellationToken: cancellationToken);
 
         return Result<DetailedPostResponse>.Success(post.ToDetailedPostResponseDto(markdownFileLink));
     }
