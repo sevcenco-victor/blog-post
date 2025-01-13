@@ -22,6 +22,6 @@ public sealed class DeletePostCommandHandler : IRequestHandler<DeletePostCommand
 
         return deleted
             ? Result.Success()
-            : Result.Failure(PostErrors.NotFound(postId));
+            : Result.Failure(PostErrors.NotFoundById(postId));
     }
 }

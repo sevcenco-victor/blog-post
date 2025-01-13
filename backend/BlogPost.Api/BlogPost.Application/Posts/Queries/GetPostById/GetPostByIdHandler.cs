@@ -26,7 +26,7 @@ public sealed class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Resul
 
         if (post == null)
         {
-            return Result<DetailedPostResponse>.Failure(PostErrors.NotFound(postId));
+            return Result<DetailedPostResponse>.Failure(PostErrors.NotFoundById(postId));
         }
 
         var markdownFileLink =

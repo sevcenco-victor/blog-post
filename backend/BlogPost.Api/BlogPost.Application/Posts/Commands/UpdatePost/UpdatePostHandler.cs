@@ -22,7 +22,7 @@ public sealed class UpdatePostHandler : IRequestHandler<UpdatePostCommand, Resul
         var existingPost = await _postRepository.GetByIdAsync(postId, cancellationToken);
         if (existingPost == null)
         {
-            return Result.Failure(PostErrors.NotFound(postId));
+            return Result.Failure(PostErrors.NotFoundById(postId));
         }
 
         var mappedPost = request.Post.ToEntity();

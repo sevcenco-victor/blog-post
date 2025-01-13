@@ -1,7 +1,7 @@
 using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Entities;
 using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Tags;
 using Microsoft.Extensions.Logging;
 using MediatR;
 

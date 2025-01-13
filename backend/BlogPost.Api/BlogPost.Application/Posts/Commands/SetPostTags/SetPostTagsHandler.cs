@@ -20,15 +20,15 @@ public class SetPostTagsHandler : IRequestHandler<SetPostTagsCommand, Result>
     {
         var (postId, tagIds) = request;
 
-        var validPost = await _postRepository.GetByIdAsync(postId,cancellationToken);
+        var validPost = await _postRepository.GetByIdAsync(postId, cancellationToken);
         if (validPost == null)
         {
-            return  Result.Failure(PostErrors.NotFound(postId));
+            return Result.Failure(PostErrors.NotFoundById(postId));
         }
 
-        var validTags = await _tagRepository.GetTagsByIdsAsync(tagIds,cancellationToken);
+        var validTags = await _tagRepository.GetTagsByIdsAsync(tagIds, cancellationToken);
 
-        await _postRepository.SetTagsAsync(request.PostId, validTags);
+        await _postRepository.SetTagsAsync(request.PostId, validTags, cancellationToken);
 
         return Result.Success();
     }

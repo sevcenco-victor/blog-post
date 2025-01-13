@@ -1,5 +1,6 @@
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Entities;
+using BlogPost.Domain.Tags;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,5 @@
 using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Entities;
+using BlogPost.Domain.Tags;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,13 +71,13 @@ public class TagRepository : ITagRepository
     {
         return await _dbContext.Tags
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
+            .FirstOrDefaultAsync(t => t.Name.ToLower()  == name.ToLower() , cancellationToken);
     }
 
     public async Task<bool> IsNameUniqueAsync(string name, int excludedTagId, CancellationToken cancellationToken)
     {
         return !await _dbContext.Tags
             .AsNoTracking()
-            .AnyAsync(t => t.Name == name && t.Id != excludedTagId, cancellationToken);
+            .AnyAsync(t => t.Name.ToLower() == name.ToLower() && t.Id != excludedTagId, cancellationToken);
     }
 }

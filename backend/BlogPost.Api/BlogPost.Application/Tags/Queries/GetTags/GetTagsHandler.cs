@@ -1,5 +1,6 @@
 using BlogPost.Application.Contracts.Tag;
 using BlogPost.Application.Mapper;
+using BlogPost.Application.Tags.Common;
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Primitives;
 using MediatR;

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using BlogPost.Domain.Entities;
+using BlogPost.Domain.Tags;
 
 namespace BlogPost.Infrastructure.Configurations;
 

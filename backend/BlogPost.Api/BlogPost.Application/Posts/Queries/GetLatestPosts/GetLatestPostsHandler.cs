@@ -3,19 +3,16 @@ using BlogPost.Application.Mapper;
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Primitives;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace BlogPost.Application.Posts.Queries.GetLatestPosts;
 
 public sealed class GetLatestPostsHandler : IRequestHandler<GetLatestPostsQuery, Result<IEnumerable<PostResponse>>>
 {
     private readonly IPostRepository _postRepository;
-    private readonly ILogger<GetLatestPostsHandler> _logger;
 
-    public GetLatestPostsHandler(IPostRepository postRepository, ILogger<GetLatestPostsHandler> logger)
+    public GetLatestPostsHandler(IPostRepository postRepository)
     {
         _postRepository = postRepository;
-        _logger = logger;
     }
 
     public async Task<Result<IEnumerable<PostResponse>>> Handle(GetLatestPostsQuery request,

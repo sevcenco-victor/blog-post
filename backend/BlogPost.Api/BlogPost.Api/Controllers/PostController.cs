@@ -11,6 +11,7 @@ using BlogPost.Application.Posts.Queries.GetPostQty;
 using BlogPost.Application.Posts.Queries.GetPosts;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogPost.Api.Controllers;
 
@@ -29,7 +30,7 @@ public class PostController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreatePostRequest request, CancellationToken cancellationToken)
     {
         var command = new CreatePostCommand(request);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: postId => Ok(postId),
@@ -47,6 +48,7 @@ public class PostController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
+    [Authorize(Roles = "ADMIN")]
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
@@ -57,7 +59,7 @@ public class PostController : ControllerBase
             onSuccess: postList => Ok(postList),
             onFailure: _ => result.ToProblemDetails());
     }
-
+    [Authorize(Roles = "ADMIN,USER")]
     [HttpGet("qty")]
     public async Task<IActionResult> GetQuantity(CancellationToken cancellationToken)
     {
