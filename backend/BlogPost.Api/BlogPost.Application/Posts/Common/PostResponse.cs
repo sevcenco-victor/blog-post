@@ -1,12 +1,11 @@
+
 namespace BlogPost.Application.Contracts.Post;
 
-public record DetailedPostResponse(
+public record PostResponse(
     int Id,
     string Title,
     string Text,
     DateOnly PostDate,
-    DateTime LastEdit,
     string ImageUrl,
-    string MarkDownFileLink,
-    IEnumerable<Domain.Entities.Tag> Tags
+    IEnumerable<Domain.Tags.Tag> Tags
 );

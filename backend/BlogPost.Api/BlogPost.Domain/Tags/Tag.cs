@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
+using BlogPost.Domain.Entities;
 using BlogPost.Domain.Primitives;
 
-namespace BlogPost.Domain.Entities;
+namespace BlogPost.Domain.Tags;
 
 public class Tag : Entity
 {

@@ -1,4 +1,5 @@
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Tags;
 
 namespace BlogPost.Domain.Entities;
 
