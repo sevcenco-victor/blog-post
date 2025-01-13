@@ -20,11 +20,13 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.Configure<GCSConfigOptions>(configuration);
         services.AddSingleton<ICloudStorageService, CloudStorageService>();
-
         services.AddSingleton<IFileFactory, FileFactory>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
         return services;
     }
