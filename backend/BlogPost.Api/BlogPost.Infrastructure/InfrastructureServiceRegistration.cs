@@ -1,7 +1,5 @@
 using BlogPost.Application.Abstractions;
 using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Posts;
-using BlogPost.Domain.Tags;
 using BlogPost.Infrastructure.ConfigOptions;
 using BlogPost.Infrastructure.Data;
 using BlogPost.Infrastructure.Repositories;
