@@ -10,7 +10,7 @@ using MediatR;
 
 namespace BlogPost.Application.Auth.Commands.Register;
 
-public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<TokenResponse>>
+public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<RegisterUserResponse>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -26,20 +26,21 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
         _mediator = mediator;
     }
 
-    public async Task<Result<TokenResponse>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<RegisterUserResponse>> Handle(RegisterUserCommand request,
+        CancellationToken cancellationToken)
     {
         var (username, email, password) = request.Request;
         var isEmailUnique = await _mediator.Send(new EmailUniqueCheckerQuery(email), cancellationToken);
 
         if (!isEmailUnique.Value)
         {
-            return Result<TokenResponse>.Failure(UserErrors.EmailAlreadyInUse());
+            return Result<RegisterUserResponse>.Failure(UserErrors.EmailAlreadyInUse());
         }
 
         var isUsernameUnique = await _mediator.Send(new UsernameUniqueCheckerQuery(username), cancellationToken);
         if (!isUsernameUnique.Value)
         {
-            return Result<TokenResponse>.Failure(UserErrors.UsernameAlreadyInUse());
+            return Result<RegisterUserResponse>.Failure(UserErrors.UsernameAlreadyInUse());
         }
 
         var hashedPassword = _passwordHasher.HashPassword(password);
@@ -50,11 +51,12 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
             _jwtTokenService.GenerateToken(userEntity),
             _jwtTokenService.GenerateRefreshToken()
         );
+
         userEntity.RefreshToken = tokenResponse.RefreshToken;
         userEntity.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
-        await _userRepository.CreateAsync(userEntity, cancellationToken);
+        var userId = await _userRepository.CreateAsync(userEntity, cancellationToken);
 
-        return Result<TokenResponse>.Success(tokenResponse);
+        return Result<RegisterUserResponse>.Success(new RegisterUserResponse(userId, tokenResponse));
     }
 }
