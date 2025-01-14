@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using BlogPost.Application.Abstractions;
 using BlogPost.Application.Auth.Common;
-using BlogPost.Application.Mapper;
 using BlogPost.Application.Users.Queries.GetById;
 using BlogPost.Domain.Common;
 using BlogPost.Domain.Primitives;
@@ -65,7 +64,7 @@ public class AuthService : IAuthService
             return Result<string>.Failure(AuthErrors.UnAuthorized());
         }
         
-        var newToken = _jwtTokenService.GenerateToken(user.ToEntity());
+        var newToken = _jwtTokenService.GenerateToken(user);
         
         return Result<string>.Success(newToken);
     }
