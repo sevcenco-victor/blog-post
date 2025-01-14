@@ -1,6 +1,6 @@
 using BlogPost.Application.Contracts.User;
 using BlogPost.Application.Users.Commands.UpdateUser;
-using BlogPost.Domain.Entities;
+using BlogPost.Application.Users.Queries.Common;
 using BlogPost.Domain.Users;
 
 namespace BlogPost.Application.Mapper;
@@ -27,6 +27,20 @@ public static class UserMapperExtension
         };
     }
 
+    public static User ToEntity(this DetailedUserResponse request)
+    {
+        return new User
+        {
+            Id = request.Id,
+            Email = request.Email,
+            Username = request.Username,
+            BirthDate = request.Birthday,
+            PasswordHash = request.PasswordHash,
+            RefreshToken = request.RefreshToken,
+            RefreshTokenExpiry = request.RefreshTokenExpiry,
+        };
+    }
+
     public static UserResponse ToUserResponse(this User request)
     {
         return new UserResponse(
@@ -34,6 +48,19 @@ public static class UserMapperExtension
             request.Username,
             request.Email,
             request.BirthDate
+        );
+    }
+
+    public static DetailedUserResponse ToDetailedUserResponse(this User request)
+    {
+        return new DetailedUserResponse(
+            request.Id,
+            request.Username,
+            request.Email,
+            request.BirthDate,
+            request.PasswordHash,
+            request.RefreshToken,
+            request.RefreshTokenExpiry
         );
     }
 }
