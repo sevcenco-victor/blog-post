@@ -1,6 +1,5 @@
 using BlogPost.Application.Abstractions;
 using BlogPost.Application.Auth.Common;
-using BlogPost.Application.Contracts.Auth;
 using BlogPost.Application.Users.Queries.GetByEmail;
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Common;
