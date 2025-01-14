@@ -1,5 +1,5 @@
-using BlogPost.Application.Contracts.User;
 using BlogPost.Application.Mapper;
+using BlogPost.Application.Users.Queries.Common;
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Primitives;
 using MediatR;
