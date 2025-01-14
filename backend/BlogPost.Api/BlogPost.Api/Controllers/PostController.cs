@@ -26,6 +26,7 @@ public class PostController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(Roles = "User")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreatePostRequest request, CancellationToken cancellationToken)
     {
@@ -48,7 +49,6 @@ public class PostController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
-    [Authorize(Roles = "ADMIN")]
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
@@ -59,7 +59,7 @@ public class PostController : ControllerBase
             onSuccess: postList => Ok(postList),
             onFailure: _ => result.ToProblemDetails());
     }
-    [Authorize(Roles = "ADMIN,USER")]
+
     [HttpGet("qty")]
     public async Task<IActionResult> GetQuantity(CancellationToken cancellationToken)
     {
@@ -87,25 +87,27 @@ public class PostController : ControllerBase
     public async Task<IActionResult> GetLatest(int? num, CancellationToken cancellationToken)
     {
         var query = new GetLatestPostsQuery(num);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: postList => Ok(postList),
             onFailure: _ => result.ToProblemDetails());
     }
 
+    [Authorize(Roles = "User")]
     [HttpPut("{postId:int}")]
     public async Task<IActionResult> Update(int postId, [FromBody] UpdatePostRequest request,
         CancellationToken cancellationToken)
     {
         var command = new UpdatePostCommand(postId, request);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: () => NoContent(),
             _ => result.ToProblemDetails());
     }
 
+    [Authorize(Roles = "User")]
     [HttpPatch("set-tags/{id:int}")]
     public async Task<IActionResult> AddTags(int id, [FromBody] IEnumerable<int> tagIds,
         CancellationToken cancellationToken)
@@ -118,7 +120,7 @@ public class PostController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
-
+    [Authorize(Roles = "Admin,User")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
