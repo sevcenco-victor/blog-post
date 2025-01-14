@@ -27,20 +27,6 @@ public static class UserMapperExtension
         };
     }
 
-    public static User ToEntity(this DetailedUserResponse request)
-    {
-        return new User
-        {
-            Id = request.Id,
-            Email = request.Email,
-            Username = request.Username,
-            BirthDate = request.Birthday,
-            PasswordHash = request.PasswordHash,
-            RefreshToken = request.RefreshToken,
-            RefreshTokenExpiry = request.RefreshTokenExpiry,
-        };
-    }
-
     public static UserResponse ToUserResponse(this User request)
     {
         return new UserResponse(
@@ -48,19 +34,6 @@ public static class UserMapperExtension
             request.Username,
             request.Email,
             request.BirthDate
-        );
-    }
-
-    public static DetailedUserResponse ToDetailedUserResponse(this User request)
-    {
-        return new DetailedUserResponse(
-            request.Id,
-            request.Username,
-            request.Email,
-            request.BirthDate,
-            request.PasswordHash,
-            request.RefreshToken,
-            request.RefreshTokenExpiry
         );
     }
 }
