@@ -15,6 +15,7 @@ public static class ServiceExtensions
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddCookie(options => { options.Cookie.Name = "token"; })
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -32,6 +33,16 @@ public static class ServiceExtensions
                             )
                         ),
                     ValidateIssuerSigningKey = true,
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Request.Cookies.TryGetValue("accessToken", out var token);
+                        if (!string.IsNullOrEmpty(token))
+                            context.Token = token;
+                        return Task.CompletedTask;
+                    }
                 };
             });
         services.AddAuthorization();

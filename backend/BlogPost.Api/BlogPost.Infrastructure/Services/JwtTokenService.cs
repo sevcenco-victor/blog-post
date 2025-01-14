@@ -48,4 +48,30 @@ public class JwtTokenService : IJwtTokenService
         rng.GetBytes(range);
         return Convert.ToBase64String(range);
     }
+
+    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = _configuration.GetValue<string>("JWTSettings:Issuer"),
+            ValidateAudience = true,
+            ValidAudience = _configuration.GetValue<string>("JWTSettings:Audience"),
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTSettings:SecretKey")!)),
+            ValidateLifetime = true,
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+        if (jwtSecurityToken == null
+            || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512))
+        {
+            throw new SecurityTokenException("Invalid token");
+        }
+
+        return principal;
+    }
 }

@@ -1,5 +1,7 @@
 using BlogPost.Application.Abstractions;
 using BlogPost.Domain.Abstractions;
+using BlogPost.Domain.Posts;
+using BlogPost.Domain.Tags;
 using BlogPost.Infrastructure.ConfigOptions;
 using BlogPost.Infrastructure.Data;
 using BlogPost.Infrastructure.Repositories;
@@ -27,6 +29,7 @@ public static class InfrastructureServiceRegistration
         services.AddSingleton<IFileFactory, FileFactory>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
