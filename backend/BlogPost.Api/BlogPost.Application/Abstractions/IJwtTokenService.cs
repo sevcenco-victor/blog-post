@@ -6,5 +6,5 @@ namespace BlogPost.Application.Abstractions;
 public interface IJwtTokenService
 {
     string GenerateToken(User user);
-    string GenerateRefreshToken(User user);
+    string GenerateRefreshToken();
 }

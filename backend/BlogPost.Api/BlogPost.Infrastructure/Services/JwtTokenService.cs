@@ -41,7 +41,7 @@ public class JwtTokenService : IJwtTokenService
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
     }
 
-    public string GenerateRefreshToken(User user)
+    public string GenerateRefreshToken()
     {
         var range = new byte[32];
         using var rng = RandomNumberGenerator.Create();

@@ -1,6 +1,5 @@
 using BlogPost.Application.Abstractions;
 using BlogPost.Application.Auth.Common;
-using BlogPost.Application.Contracts.Auth;
 using BlogPost.Application.Mapper;
 using BlogPost.Application.Users.Queries.EmailUniqueChecker;
 using BlogPost.Application.Users.Queries.UsernameUniqueChecker;
@@ -49,7 +48,7 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
 
         var tokenResponse = new TokenResponse(
             _jwtTokenService.GenerateToken(userEntity),
-            _jwtTokenService.GenerateRefreshToken(userEntity)
+            _jwtTokenService.GenerateRefreshToken()
         );
         userEntity.RefreshToken = tokenResponse.RefreshToken;
         userEntity.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);

@@ -41,7 +41,7 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<TokenRe
 
         var tokenResponse = new TokenResponse(
             _jwtTokenService.GenerateToken(validUser),
-            _jwtTokenService.GenerateRefreshToken(validUser)
+            _jwtTokenService.GenerateRefreshToken()
         );
 
         validUser.RefreshToken = tokenResponse.RefreshToken;
