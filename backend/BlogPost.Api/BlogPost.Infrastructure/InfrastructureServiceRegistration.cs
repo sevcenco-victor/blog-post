@@ -1,5 +1,7 @@
 using BlogPost.Application.Abstractions;
-using BlogPost.Domain.Abstractions;
+using BlogPost.Domain.Posts;
+using BlogPost.Domain.Tags;
+using BlogPost.Domain.Users;
 using BlogPost.Infrastructure.ConfigOptions;
 using BlogPost.Infrastructure.Data;
 using BlogPost.Infrastructure.Repositories;
@@ -23,6 +25,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IUserRepository, UserRepository>();
 
         services.Configure<GCSConfigOptions>(configuration);
+        services.Configure<JwtConfigOptions>(configuration.GetSection("JWTSettings"));
         services.AddSingleton<ICloudStorageService, CloudStorageService>();
         services.AddSingleton<IFileFactory, FileFactory>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();

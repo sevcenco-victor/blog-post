@@ -4,18 +4,19 @@ using System.Security.Cryptography;
 using System.Text;
 using BlogPost.Application.Abstractions;
 using BlogPost.Domain.Users;
-using Microsoft.Extensions.Configuration;
+using BlogPost.Infrastructure.ConfigOptions;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BlogPost.Infrastructure.Services;
 
 public class JwtTokenService : IJwtTokenService
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtConfigOptions _options;
 
-    public JwtTokenService(IConfiguration configuration)
+    public JwtTokenService(IOptions<JwtConfigOptions> options)
     {
-        _configuration = configuration;
+        _options = options.Value;
     }
 
     public string GenerateToken(User user)
@@ -27,12 +28,13 @@ public class JwtTokenService : IJwtTokenService
             new Claim(ClaimTypes.Role, user.Role.ToString()),
         };
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTSettings:SecretKey")!));
+            Encoding.UTF8.GetBytes(_options.SecretKey));
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
         var tokenDescriptor = new JwtSecurityToken(
-            issuer: _configuration.GetValue<string>("JWTSettings:Issuer"),
-            audience: _configuration.GetValue<string>("JWTSettings:Audience"),
+            issuer: _options.Issuer,
+            audience: _options.Audience,
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(10),
             signingCredentials: credentials
@@ -54,12 +56,13 @@ public class JwtTokenService : IJwtTokenService
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = _configuration.GetValue<string>("JWTSettings:Issuer"),
+            ValidIssuer = _options.Issuer,
             ValidateAudience = true,
-            ValidAudience = _configuration.GetValue<string>("JWTSettings:Audience"),
+            ValidAudience = _options.Audience,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey =
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTSettings:SecretKey")!)),
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_options.SecretKey)),
             ValidateLifetime = true,
         };
         var tokenHandler = new JwtSecurityTokenHandler();
