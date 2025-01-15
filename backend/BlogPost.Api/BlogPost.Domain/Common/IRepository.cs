@@ -1,4 +1,4 @@
-namespace BlogPost.Domain.Abstractions;
+namespace BlogPost.Domain.Common;
 
 public interface IRepository<TK, T> where T : class
 {

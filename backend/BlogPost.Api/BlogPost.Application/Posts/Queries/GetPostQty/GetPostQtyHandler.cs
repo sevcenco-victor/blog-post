@@ -1,4 +1,4 @@
-using BlogPost.Domain.Abstractions;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
 using MediatR;
 

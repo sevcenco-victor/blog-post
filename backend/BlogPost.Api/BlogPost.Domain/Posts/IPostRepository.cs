@@ -1,7 +1,8 @@
+using BlogPost.Domain.Common;
 using BlogPost.Domain.Entities;
 using BlogPost.Domain.Tags;
 
-namespace BlogPost.Domain.Abstractions;
+namespace BlogPost.Domain.Posts;
 
 public interface IPostRepository : IRepository<int, Post>
 {

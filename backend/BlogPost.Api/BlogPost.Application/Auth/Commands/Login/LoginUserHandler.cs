@@ -4,6 +4,7 @@ using BlogPost.Application.Users.Queries.GetByEmail;
 using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Common;
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Users;
 using MediatR;
 
 namespace BlogPost.Application.Auth.Commands.Login;

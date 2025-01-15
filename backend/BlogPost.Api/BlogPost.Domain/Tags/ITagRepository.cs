@@ -1,7 +1,6 @@
-using BlogPost.Domain.Entities;
-using BlogPost.Domain.Tags;
+using BlogPost.Domain.Common;
 
-namespace BlogPost.Domain.Abstractions;
+namespace BlogPost.Domain.Tags;
 
 public interface ITagRepository : IRepository<int, Tag>
 {

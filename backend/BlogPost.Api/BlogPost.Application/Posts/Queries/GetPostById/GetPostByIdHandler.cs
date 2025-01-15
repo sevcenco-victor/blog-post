@@ -1,8 +1,8 @@
 using BlogPost.Application.Abstractions;
 using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
-using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
 using MediatR;
 

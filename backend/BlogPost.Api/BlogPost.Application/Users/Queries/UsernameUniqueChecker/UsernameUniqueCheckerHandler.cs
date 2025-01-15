@@ -1,5 +1,5 @@
-using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Users;
 using MediatR;
 
 namespace BlogPost.Application.Users.Queries.UsernameUniqueChecker;

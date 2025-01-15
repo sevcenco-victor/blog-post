@@ -59,7 +59,7 @@ public class PostController : ControllerBase
             onSuccess: postList => Ok(postList),
             onFailure: _ => result.ToProblemDetails());
     }
-
+    
     [HttpGet("qty")]
     public async Task<IActionResult> GetQuantity(CancellationToken cancellationToken)
     {
