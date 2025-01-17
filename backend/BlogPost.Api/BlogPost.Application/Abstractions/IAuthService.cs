@@ -6,6 +6,6 @@ namespace BlogPost.Application.Abstractions;
 
 public interface IAuthService
 {
-    void SetTokensInsideCookie(TokenResponse tokens, HttpContext httpContext);
+    void SetRefreshTokenInsideCookie(string refreshToken, HttpContext httpContext);
     Task<Result<string>> RenewAccessToken(TokenResponse tokens, CancellationToken cancellationToken);
 }
