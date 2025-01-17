@@ -1,7 +1,7 @@
-namespace BlogPost.Domain.Abstractions;
+namespace BlogPost.Domain.Users;
 
 public enum UserRoles
 {
-    ADMIN,
-    USER,
+    Admin,
+    User,
 }
