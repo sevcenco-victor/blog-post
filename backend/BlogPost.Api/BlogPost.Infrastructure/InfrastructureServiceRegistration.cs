@@ -24,8 +24,8 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 
-        services.Configure<GCSConfigOptions>(configuration);
-        services.Configure<JwtConfigOptions>(configuration.GetSection("JWTSettings"));
+        services.Configure<GcsSettings>(configuration);
+        services.Configure<JwtSettings>(configuration.GetSection("JWTSettings"));
         services.AddSingleton<ICloudStorageService, CloudStorageService>();
         services.AddSingleton<IFileFactory, FileFactory>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();

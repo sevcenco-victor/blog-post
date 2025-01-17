@@ -1,6 +1,6 @@
 namespace BlogPost.Infrastructure.ConfigOptions;
 
-public class JwtConfigOptions
+public class JwtSettings
 {
     public string SecretKey { get; set; }
     public string Issuer { get; set; }

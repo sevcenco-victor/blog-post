@@ -12,9 +12,9 @@ namespace BlogPost.Infrastructure.Services;
 
 public class JwtTokenService : IJwtTokenService
 {
-    private readonly JwtConfigOptions _options;
+    private readonly JwtSettings _options;
 
-    public JwtTokenService(IOptions<JwtConfigOptions> options)
+    public JwtTokenService(IOptions<JwtSettings> options)
     {
         _options = options.Value;
     }
@@ -23,7 +23,6 @@ public class JwtTokenService : IJwtTokenService
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Role.ToString()),
         };
@@ -36,7 +35,7 @@ public class JwtTokenService : IJwtTokenService
             issuer: _options.Issuer,
             audience: _options.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(10),
+            expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: credentials
         );
 
