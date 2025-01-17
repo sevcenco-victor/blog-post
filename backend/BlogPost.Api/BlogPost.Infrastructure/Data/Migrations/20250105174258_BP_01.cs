@@ -16,8 +16,7 @@ namespace BlogPost.Infrastructure.Data.Migrations
                 name: "Posts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Text = table.Column<string>(type: "text", nullable: false),
                     PostDate = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "CURRENT_DATE"),
@@ -34,8 +33,7 @@ namespace BlogPost.Infrastructure.Data.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Color = table.Column<string>(type: "text", nullable: false)
                 },
@@ -48,8 +46,8 @@ namespace BlogPost.Infrastructure.Data.Migrations
                 name: "PostTag",
                 columns: table => new
                 {
-                    BlogsId = table.Column<int>(type: "integer", nullable: false),
-                    TagsId = table.Column<int>(type: "integer", nullable: false)
+                    BlogsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TagsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

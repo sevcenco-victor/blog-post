@@ -13,5 +13,5 @@ public static class UserErrors
     public static Error NotFoundByEmail(string email) =>
         Error.NotFound("User.EmailNotFound", $"No user found with email: {email}");
 
-    public static Error NotFoundById(int userId) => Error.NotFound("User.NotFoundById", $"No user found with id: {userId}");
+    public static Error NotFoundById(Guid userId) => Error.NotFound("User.NotFoundById", $"No user found with id: {userId}");
 }

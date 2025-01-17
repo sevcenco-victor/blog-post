@@ -32,8 +32,8 @@ public class TagController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetTagByIdQuery(id);
         var result = await _mediator.Send(query, cancellationToken);
@@ -55,8 +55,8 @@ public class TagController : ControllerBase
     }
 
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateTagRequest request,
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTagRequest request,
         CancellationToken cancellationToken)
     {
         var command = new UpdateTagCommand(id, request);
@@ -67,8 +67,8 @@ public class TagController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var command = new DeleteTagCommand(id);
         var result = await _mediator.Send(command, cancellationToken);

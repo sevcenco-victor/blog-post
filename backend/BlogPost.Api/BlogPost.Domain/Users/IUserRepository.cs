@@ -2,7 +2,7 @@ using BlogPost.Domain.Common;
 
 namespace BlogPost.Domain.Users;
 
-public interface IUserRepository : IRepository<int, User>
+public interface IUserRepository : IRepository<Guid, User>
 {
     Task<bool> IsEmailUnique(string email);
     Task<bool> IsUsernameUnique(string username);

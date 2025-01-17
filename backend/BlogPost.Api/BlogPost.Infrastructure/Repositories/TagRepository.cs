@@ -1,4 +1,3 @@
-using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Tags;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -14,14 +13,15 @@ public class TagRepository : ITagRepository
         _dbContext = dbContext;
     }
 
-    public async Task<int> CreateAsync(Tag entity, CancellationToken cancellationToken)
+    public async Task<Guid> CreateAsync(Tag entity, CancellationToken cancellationToken)
     {
+        entity.Id = Guid.NewGuid();
         await _dbContext.Tags.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return entity.Id;
     }
 
-    public async Task<Tag?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Tag?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Tags
             .AsNoTracking()
@@ -46,7 +46,7 @@ public class TagRepository : ITagRepository
         return affectedRows > 0;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var affectedRows = await _dbContext.Tags
             .Where(t => t.Id == id)
@@ -55,9 +55,9 @@ public class TagRepository : ITagRepository
         return affectedRows > 0;
     }
 
-    public async Task<IEnumerable<Tag>> GetTagsByIdsAsync(IEnumerable<int> tagIds, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Tag>> GetTagsByIdsAsync(IEnumerable<Guid> tagIds, CancellationToken cancellationToken)
     {
-        var uniqueTagIds = new HashSet<int>(tagIds);
+        var uniqueTagIds = new HashSet<Guid>(tagIds);
 
         var tagEntities = await _dbContext.Tags
             .AsNoTracking()
@@ -74,7 +74,7 @@ public class TagRepository : ITagRepository
             .FirstOrDefaultAsync(t => t.Name.ToLower()  == name.ToLower() , cancellationToken);
     }
 
-    public async Task<bool> IsNameUniqueAsync(string name, int excludedTagId, CancellationToken cancellationToken)
+    public async Task<bool> IsNameUniqueAsync(string name, Guid excludedTagId, CancellationToken cancellationToken)
     {
         return !await _dbContext.Tags
             .AsNoTracking()

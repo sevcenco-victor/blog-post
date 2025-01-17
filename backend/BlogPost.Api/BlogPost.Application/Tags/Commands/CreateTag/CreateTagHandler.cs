@@ -1,5 +1,3 @@
-using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Primitives;
 using BlogPost.Domain.Tags;
 using Microsoft.Extensions.Logging;
@@ -7,7 +5,7 @@ using MediatR;
 
 namespace BlogPost.Application.Tags.Commands.CreateTag;
 
-public sealed class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<int>>
+public sealed class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<Guid>>
 {
     private readonly ITagRepository _tagRepository;
     private readonly ILogger<CreateTagHandler> _logger;
@@ -18,7 +16,7 @@ public sealed class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<
         _logger = logger;
     }
 
-    public async Task<Result<int>> Handle(CreateTagCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateTagCommand request, CancellationToken cancellationToken)
     {
         var (name, color) = request.Entity;
 
@@ -27,7 +25,7 @@ public sealed class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<
         if (existingTag != null)
         {
             _logger.LogWarning("Tag with Name: {Name} already exists.", name);
-            return Result<int>.Failure(TagErrors.NameAlreadyExists(name));
+            return Result<Guid>.Failure(TagErrors.NameAlreadyExists(name));
         }
 
         var tag = new Tag { Name = name, Color = color };
@@ -36,6 +34,6 @@ public sealed class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<
 
         _logger.LogInformation("Tag with Id: {Id} added successfully to database", entityId);
 
-        return Result<int>.Success(entityId);
+        return Result<Guid>.Success(entityId);
     }
 }

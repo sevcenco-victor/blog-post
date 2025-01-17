@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.SetPostTags;
 
-public sealed record SetPostTagsCommand(int PostId, IEnumerable<int> TagIds) : IRequest<Result>;
+public sealed record SetPostTagsCommand(Guid PostId, IEnumerable<Guid> TagIds) : IRequest<Result>;

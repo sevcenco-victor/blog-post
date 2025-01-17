@@ -22,13 +22,11 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BlogPost.Domain.Entities.Post", b =>
+            modelBuilder.Entity("BlogPost.Domain.Posts.Post", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -64,11 +62,9 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("BlogPost.Domain.Tags.Tag", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -89,11 +85,9 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("BlogPost.Domain.Users.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
@@ -114,7 +108,9 @@ namespace BlogPost.Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Role")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -122,16 +118,22 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("PostTag", b =>
                 {
-                    b.Property<int>("BlogsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BlogsId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TagsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("BlogsId", "TagsId");
 
@@ -142,7 +144,7 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("PostTag", b =>
                 {
-                    b.HasOne("BlogPost.Domain.Entities.Post", null)
+                    b.HasOne("BlogPost.Domain.Posts.Post", null)
                         .WithMany()
                         .HasForeignKey("BlogsId")
                         .OnDelete(DeleteBehavior.Cascade)

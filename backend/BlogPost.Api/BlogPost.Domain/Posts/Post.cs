@@ -1,9 +1,9 @@
 using BlogPost.Domain.Primitives;
 using BlogPost.Domain.Tags;
 
-namespace BlogPost.Domain.Entities;
+namespace BlogPost.Domain.Posts;
 
-public class Post : Entity
+public class Post : Entity<Guid>
 {
     public string Title { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;

@@ -1,7 +1,7 @@
-namespace BlogPost.Application.Contracts.Post;
+namespace BlogPost.Application.Posts.Queries.GetPostById;
 
 public record DetailedPostResponse(
-    int Id,
+    Guid Id,
     string Title,
     string Text,
     DateOnly PostDate,

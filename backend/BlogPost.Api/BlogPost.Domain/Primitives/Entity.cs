@@ -1,10 +1,10 @@
 namespace BlogPost.Domain.Primitives;
 
-public abstract class Entity
+public abstract class Entity<TK>
 {
-    public int Id { get; set; }
+    public TK Id { get; set; }
 
-    protected Entity(int id) => Id = id;
+    protected Entity(TK id) => Id = id;
 
     protected Entity()
     {

@@ -1,9 +1,9 @@
-namespace BlogPost.Application.Contracts.Post;
+namespace BlogPost.Application.Posts.Commands.CreatePost;
 
 public record CreatePostRequest(
     string Title,
     string Text,
     string ImageUrl,
     string MarkdownFileContent,
-    IEnumerable<int> TagIds
+    IEnumerable<Guid> TagIds
 );

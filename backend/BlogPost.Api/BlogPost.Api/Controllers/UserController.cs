@@ -28,8 +28,8 @@ public class UserController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
-    [HttpGet("{id:int}", Name = "GetUserById")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}", Name = "GetUserById")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
         var result = await _mediator.Send(query, cancellationToken);

@@ -1,3 +1,3 @@
-namespace BlogPost.Application.Contracts.Post;
+namespace BlogPost.Application.Posts.Common;
 
-public record PaginationFilter(int PageNumber, int PageSize, string? Title, int[]? TagIds);
+public record PaginationFilter(int PageNumber, int PageSize, string? Title, Guid[]? TagIds);

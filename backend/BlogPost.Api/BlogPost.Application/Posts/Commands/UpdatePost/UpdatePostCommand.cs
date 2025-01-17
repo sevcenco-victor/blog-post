@@ -4,4 +4,4 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Commands.UpdatePost;
 
-public sealed record UpdatePostCommand(int EntityId, UpdatePostRequest Post) : IRequest<Result>;
+public sealed record UpdatePostCommand(Guid EntityId, UpdatePostRequest Post) : IRequest<Result>;

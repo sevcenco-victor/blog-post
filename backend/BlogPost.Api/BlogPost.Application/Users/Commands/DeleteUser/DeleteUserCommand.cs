@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BlogPost.Application.Users.Commands.DeleteUser;
 
-public sealed record DeleteUserCommand(int UserId) : IRequest<Result<bool>>;
+public sealed record DeleteUserCommand(Guid UserId) : IRequest<Result<bool>>;

@@ -4,4 +4,4 @@ using MediatR;
 
 namespace BlogPost.Application.Tags.Commands.UpdateTag;
 
-public sealed record UpdateTagCommand(int EntityId, UpdateTagRequest Entity) : IRequest<Result>;
+public sealed record UpdateTagCommand(Guid EntityId, UpdateTagRequest Entity) : IRequest<Result>;
