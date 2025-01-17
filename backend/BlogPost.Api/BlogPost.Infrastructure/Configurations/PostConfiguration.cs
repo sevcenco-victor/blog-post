@@ -1,14 +1,14 @@
+using BlogPost.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BlogPost.Infrastructure.Configurations;
 
-public class PostConfiguration : IEntityTypeConfiguration<Domain.Entities.Post>
+public class PostConfiguration : IEntityTypeConfiguration<Post>
 {
-    public void Configure(EntityTypeBuilder<Domain.Entities.Post> builder)
+    public void Configure(EntityTypeBuilder<Post> builder)
     {
-        builder.Property(b => b.Id)
-            .UseIdentityColumn();
+        builder.HasKey(b => b.Id);
 
         builder.Property(t => t.Title)
             .HasMaxLength(200)
@@ -26,7 +26,7 @@ public class PostConfiguration : IEntityTypeConfiguration<Domain.Entities.Post>
 
         builder.Property(b => b.ImageUrl)
             .IsRequired();
-        
+
         builder.Property(b => b.MarkdownFileName)
             .IsRequired();
 
