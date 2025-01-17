@@ -1,5 +1,8 @@
 using BlogPost.Application.Contracts.Post;
-using BlogPost.Domain.Entities;
+using BlogPost.Application.Posts.Commands.CreatePost;
+using BlogPost.Application.Posts.Common;
+using BlogPost.Application.Posts.Queries.GetPostById;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Tags;
 
 namespace BlogPost.Application.Mapper;

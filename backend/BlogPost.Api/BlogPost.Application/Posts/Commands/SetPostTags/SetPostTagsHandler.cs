@@ -1,4 +1,3 @@
-using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
 using BlogPost.Domain.Tags;

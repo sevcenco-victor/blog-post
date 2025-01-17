@@ -1,4 +1,4 @@
-using BlogPost.Application.Contracts.User;
+using BlogPost.Application.Users.Commands.CreateUser;
 using BlogPost.Application.Users.Commands.UpdateUser;
 using BlogPost.Application.Users.Queries.Common;
 using BlogPost.Domain.Users;

@@ -1,4 +1,5 @@
 using BlogPost.Application.Contracts.Tag;
+using BlogPost.Application.Tags.Commands.CreateTag;
 using BlogPost.Application.Tags.Common;
 using BlogPost.Domain.Tags;
 

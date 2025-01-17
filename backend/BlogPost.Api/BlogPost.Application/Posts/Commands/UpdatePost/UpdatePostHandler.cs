@@ -1,5 +1,4 @@
 using BlogPost.Application.Mapper;
-using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
 using MediatR;

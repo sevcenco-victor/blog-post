@@ -1,6 +1,5 @@
 using BlogPost.Application.Mapper;
 using BlogPost.Application.Tags.Common;
-using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Primitives;
 using BlogPost.Domain.Tags;
 using MediatR;

@@ -1,4 +1,4 @@
-using BlogPost.Application.Contracts.User;
+using BlogPost.Application.Users.Commands.CreateUser;
 using BlogPost.Domain.Primitives;
 using MediatR;
 
