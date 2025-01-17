@@ -30,9 +30,14 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<TokenRe
         var (email, password) = request.Data;
 
         var result = await _mediator.Send(new GetByEmailQuery(email), cancellationToken);
-        var validUser = result.Value;
-        
-        var validPassword = _passwordHasher.VerifyHashedPassword(validUser.PasswordHash, password);
+        if (result.IsFailure)
+        {
+            return Result<TokenResponse>.Failure(AuthErrors.InvalidCredentials());
+        }
+
+        var user = result.Value;
+
+        var validPassword = _passwordHasher.VerifyHashedPassword(user.PasswordHash, password);
 
         if (!validPassword)
         {
@@ -40,14 +45,14 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<TokenRe
         }
 
         var tokenResponse = new TokenResponse(
-            _jwtTokenService.GenerateToken(validUser),
+            _jwtTokenService.GenerateToken(user),
             _jwtTokenService.GenerateRefreshToken()
         );
 
-        validUser.RefreshToken = tokenResponse.RefreshToken;
-        validUser.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+        user.RefreshToken = tokenResponse.RefreshToken;
+        user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
-        var isUpdated = await _userRepository.UpdateAsync(validUser, cancellationToken);
+        var isUpdated = await _userRepository.UpdateAsync(user, cancellationToken);
 
         return !isUpdated
             ? Result<TokenResponse>.Failure(Error.Failure("Login.GenerateToken", "An error occured"))
