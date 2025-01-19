@@ -1,0 +1,12 @@
+.formTags {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+}
