@@ -5,7 +5,7 @@ namespace BlogPost.Domain.Posts;
 
 public interface IPostRepository : IRepository<Guid, Post>
 {
-    Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize, string? title, Guid[]? tagIds,
+    Task<IEnumerable<Post>> GetPaginatedAsync(Guid? userId, int pageNum, int pageSize, string? title, Guid[]? tagIds,
         CancellationToken cancellationToken = default);
 
     Task<Post> GetByPostDateAsync(DateOnly date, CancellationToken cancellationToken = default);

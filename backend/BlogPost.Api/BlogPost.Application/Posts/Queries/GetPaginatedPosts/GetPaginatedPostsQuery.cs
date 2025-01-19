@@ -4,5 +4,5 @@ using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPaginatedPosts;
 
-public sealed record GetPaginatedPostsQuery(PaginationFilter PaginationFilter)
+public sealed record GetPaginatedPostsQuery(Guid? UserId, PaginationFilter PaginationFilter)
     : IRequest<Result<IEnumerable<PostResponse>>>;

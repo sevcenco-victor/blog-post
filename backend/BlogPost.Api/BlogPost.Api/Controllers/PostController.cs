@@ -72,11 +72,24 @@ public class PostController : ControllerBase
             onFailure: _ => result.ToProblemDetails());
     }
 
+    [HttpGet("user/{userId:guid}")]
+    public async Task<IActionResult> GetUserPosts(Guid userId, [FromQuery] PaginationFilter paginationFilter,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetPaginatedPostsQuery(userId, paginationFilter);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return result.Match<IActionResult>(
+            onSuccess: posts => Ok(posts),
+            onFailure: _ => result.ToProblemDetails()
+        );
+    }
+
     [HttpGet("paginated")]
     public async Task<IActionResult> GetAllPaginated([FromQuery] PaginationFilter paginationFilter,
         CancellationToken cancellationToken)
     {
-        var query = new GetPaginatedPostsQuery(paginationFilter);
+        var query = new GetPaginatedPostsQuery(null, paginationFilter);
         var result = await _mediator.Send(query, cancellationToken);
 
         return result.Match<IActionResult>(

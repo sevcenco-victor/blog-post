@@ -1,3 +1,5 @@
+using BlogPost.Domain.Tags;
+
 namespace BlogPost.Application.Posts.Queries.GetPostById;
 
 public record DetailedPostResponse(
@@ -8,5 +10,6 @@ public record DetailedPostResponse(
     DateTime LastEdit,
     string ImageUrl,
     string MarkDownFileLink,
-    IEnumerable<Domain.Tags.Tag> Tags
+    IEnumerable<Tag> Tags,
+    string AuthorUsername
 );

@@ -1,5 +1,6 @@
 using BlogPost.Domain.Posts;
 using BlogPost.Domain.Tags;
+using BlogPost.Domain.Users;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ public class PostRepository : IPostRepository
         {
             _dbContext.Entry(tag).State = EntityState.Unchanged;
         }
-        
+
         await _dbContext.Posts.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -34,6 +35,7 @@ public class PostRepository : IPostRepository
         var post = await _dbContext.Posts
             .AsNoTracking()
             .Include<Post, ICollection<Tag>>(p => p.Tags)
+            .Include<Post, User>(x => x.User)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return post;
@@ -70,13 +72,19 @@ public class PostRepository : IPostRepository
         return affectedRows > 0;
     }
 
-    public async Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize, string? title, Guid[]? tagIds,
+    public async Task<IEnumerable<Post>> GetPaginatedAsync(Guid? userId, int pageNum, int pageSize, string? title,
+        Guid[]? tagIds,
         CancellationToken cancellationToken)
     {
         var query = _dbContext.Posts
             .AsNoTracking()
             .Include(p => p.Tags)
             .AsQueryable();
+
+        if (userId != null)
+        {
+            query = query.Where(b => b.UserId == userId);
+        }
 
         if (tagIds != null)
         {
