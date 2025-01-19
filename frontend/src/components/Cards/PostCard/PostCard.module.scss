@@ -3,8 +3,12 @@
   height: 100%;
   width: 100%;
 
+  max-height: 444px;
+
   column-gap: var(--column-gap);
   row-gap: var(--row-gap);
+
+  overflow: hidden;
 
   transition: all 0.05s ease;
 
@@ -28,6 +32,7 @@
   .wrapper {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 24px;
   }
 
@@ -37,9 +42,18 @@
     gap: 8px;
   }
 
+  .truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   .text {
     color: var(--color-subtext);
+    -webkit-line-clamp: 2;
   }
+
 
   .tagList {
     display: flex;
@@ -53,7 +67,6 @@
 }
 
 .portrait {
-  flex-direction: column;
   grid-template-rows: repeat(2, auto);
 }
 
