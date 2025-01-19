@@ -1,101 +1,122 @@
 import {Pagination} from "@mui/material";
 import {useEffect, useState} from "react";
-import {getLatestPosts, getPosts} from "../../apis/postRequests.ts";
-import PostCard from "../../components/Cards/PostCard";
-import {Post} from "../../types";
-import {BLOG_PAGE_RECENT_POSTS_NUM, BLOG_PAGE_VIEW_POST_QTY} from "../../lib/constants";
+import {useAxios} from "@/hooks/useAxios.tsx";
+import {getLatestPosts, getPosts, getPostsQuantity} from "@/apis/postRequests.ts";
+import {GetPaginatedPostRequest, Post} from "@/types";
+import {Loader} from "@components";
+import {PostCard} from "@components/Cards";
+import {determinePageCount} from "@/utils/determinePageCount.ts";
+import {BLOG_PAGE_RECENT_POSTS_NUM, BLOG_PAGE_VIEW_POST_QTY} from "@/lib/constants.ts";
 import styles from "./Blog.module.scss";
 
 
-const Blog = () => {
-    const [latestPosts, setLatestPosts] = useState<Post[]>([]);
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [pageNum, setPageNum] = useState(1);
+export const Blog = () => {
+    const {
+        data: latestPosts,
+        isLoading: isLoadingRecentPosts,
+        error: latestPostsError,
+        execute: executeLatestPosts
+    } = useAxios<Post[], number>(getLatestPosts);
+    const {
+        data: postQty,
+        isLoading: isLoadingPostQty,
+        error: postQtyError,
+        execute: executePostQty
+    } = useAxios<number, void>(getPostsQuantity);
+    const {
+        data: allPosts,
+        isLoading: isLoadingPosts,
+        error: postsError,
+        execute: executePosts
+    } = useAxios<Post[], GetPaginatedPostRequest>(getPosts);
+
+    const [currPage, setCurrPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
 
     useEffect(() => {
-        const fetchLatestPosts = async () => {
-            const res = await getLatestPosts(BLOG_PAGE_RECENT_POSTS_NUM);
-            setLatestPosts(res);
-        }
-
-        fetchLatestPosts();
+        executeLatestPosts(BLOG_PAGE_RECENT_POSTS_NUM).then();
+        executePostQty();
     }, []);
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            const res = await getPosts(BLOG_PAGE_VIEW_POST_QTY, pageNum);
-            setPosts(res);
+        if (postQty) {
+            setPageCount(determinePageCount(postQty, BLOG_PAGE_VIEW_POST_QTY));
         }
-        fetchPosts();
+    }, [postQty]);
 
-    }, [pageNum])
+    useEffect(() => {
+        executePosts({pageNumber: currPage, postNum: BLOG_PAGE_VIEW_POST_QTY}).then()
+    }, [currPage])
 
+    const recentPosts = latestPosts?.slice(0, 3);
+    const randomPost = latestPosts?.[3];
 
     return (
-        <div className={`${styles["blog-page"]}`}>
+        <>
             <section className={`section section-hero`}>
                 <div className={`section-hero__title-wrapper`}>
                     <h1>THE BLOG</h1>
                 </div>
             </section>
 
-            <section className={`section ${styles['section-recent-blog']}`}>
+            <section className={`section ${styles.sectionRecentBlog}`}>
                 <h2 className={`section__header`}>Recent blog posts</h2>
-                <div className={`section__body ${styles['section-recent-blog__content']}`}>
+                <div className={`section__body ${styles.content}`}>
                     {
-                        latestPosts.slice(0, 3).map((p, index) => {
-                            const cardOrientation = index === 0 ? "portrait" : "landscape";
-
-                            return <PostCard key={`latest_posts__${p.id}`}
-                                             id={p.id}
-                                             imageUrl={p.imageUrl}
-                                             title={p.title}
-                                             text={p.text}
-                                             postDate={p.postDate}
-                                             tags={p.tags}
-                                             orientation={cardOrientation}
-
-                            />
-                        })
+                        isLoadingRecentPosts
+                            ? <Loader/>
+                            : recentPosts?.map((p, index) => {
+                                return <PostCard key={p.id}
+                                                 {...p}
+                                                 orientation={index === 0 ? 'portrait' : 'landscape'}
+                                />
+                            })
                     }
                 </div>
             </section>
 
-            <section className={`section ${styles['section-random-blog']}`}>
-                <div className={`section__body ${styles['section-random-blog__content']}`}>
-                    {
-                        latestPosts.slice(3, 4).map((p) =>
-                            <PostCard key={`recent-blog__${p.id}`}
-                                      id={p.id}
-                                      imageUrl={p.imageUrl}
-                                      postDate={p.postDate}
-                                      title={p.title}
-                                      text={p.text}
-                                      tags={p.tags}
+            <section className={`section ${styles.sectionRandomBlog}`}>
+                <div className={`section__body ${styles.content}`}>
+                    {randomPost && <PostCard {...randomPost}/>}
+                </div>
+            </section>
+
+            <section className={`section ${styles.sectionAllBlogs}`}>
+                <h2 className={`section__header`}>All blog posts</h2>
+                <div className={`section__body ${styles.content}`}>
+                    {isLoadingPosts
+                        ? <Loader/>
+                        : allPosts?.map((p) =>
+                            <PostCard key={`paginated-posts-${p.id}`}
+                                      {...p}
+                                      orientation={'portrait'}
                             />
                         )
                     }
                 </div>
-            </section>
-
-            <section className={`section ${styles['section-all-blogs']}`}>
-                <h2 className={`section__header`}>All blog posts</h2>
-                <div className={`section__body ${styles['section-all-blogs__content']}`}>
-                    {posts.map((p) =>
-                        <PostCard key={`paginated-posts-${p.id}`} id={p.id} imageUrl={p.imageUrl} postDate={p.postDate}
-                                  title={p.title} text={p.text}
-                                  tags={p.tags} orientation={'portrait'}/>)
-                    }
-
-                    <Pagination count={10} shape={'rounded'}
-                                color={'secondary'}
-                                onChange={(_, page) => setPageNum(page)}
-                                className={styles['pagination']}
+                <hr/>
+                {isLoadingPostQty
+                    ? <Loader/>
+                    : <Pagination count={pageCount} shape={'rounded'}
+                                  sx={{
+                                      "& .MuiPaginationItem-root": {
+                                          color: "var(--font-color)",
+                                      },
+                                      "& .MuiPaginationItem-root.Mui-selected": {
+                                          color: "var(--background-color)",
+                                          backgroundColor: "var(--font-color)",
+                                      },
+                                      "& .MuiPaginationItem-root.Mui-selected:hover": {
+                                          color: "var(--background-color)",
+                                          backgroundColor: "var(--font-color)",
+                                      },
+                                  }}
+                                  onChange={(_, page) => setCurrPage(page)}
+                                  className={styles['pagination']}
                     />
-                </div>
+                }
             </section>
-
-        </div>
+        </>
     );
 };
 
