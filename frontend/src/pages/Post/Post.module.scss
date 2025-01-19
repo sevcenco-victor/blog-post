@@ -1,32 +1,52 @@
-.post-page {
+@use '../../styles/media' as m;
+
+.postPage {
   display: grid;
-  grid-template-columns: 342px 1fr;
+  grid-template-columns: 284px 1fr;
   column-gap: var(--column-gap);
-}
 
-.section-recent-posts {
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--row-gap);
-
-  &__content {
-    display: grid;
-    grid-auto-rows: 432px;
-    row-gap: var(--row-gap);
-  }
-}
-
-.section-post-details {
-  display: flex;
-  flex-direction: column;
-
-  & img {
-    overflow: hidden;
+  @include m.tablet {
+    grid-template-columns:  1fr;
+    & > :nth-child(2) {
+      grid-row-start: 1;
+    }
   }
 
-  &__tags {
+  .sectionRecentPosts {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
+    row-gap: var(--row-gap);
+
+    .content {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: var(--row-gap);
+
+      @include m.tablet {
+        grid-template-columns: repeat(2, auto);
+        column-gap: var(--column-gap);
+      }
+      @include m.mobile {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  .sectionPostDetails {
+    display: flex;
+    flex-direction: column;
+
+    .date {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
   }
 }

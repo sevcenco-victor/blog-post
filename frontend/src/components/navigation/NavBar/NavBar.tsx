@@ -1,12 +1,18 @@
 import {useRef} from "react";
 import {IoMdClose} from "react-icons/io";
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {RxHamburgerMenu} from "react-icons/rx";
 import {ThemeToggle} from "@components/Toggle";
 import styles from './NavBar.module.scss'
 
+import {useAuth} from "@/hooks/useAuth.tsx";
+
 export const NavBar = () => {
+    const {user} = useAuth();
+    const navigate = useNavigate();
     const navDialog = useRef<HTMLDialogElement | null>(null);
+
+    const accountPath = user?.role === 'User' ? "/account" : "/admin";
 
     const openMobileNav = () => {
         if (navDialog.current) {
@@ -48,6 +54,23 @@ export const NavBar = () => {
                              ${isActive ? styles.activeLink : ''}`}>
                     Newsletter
                 </NavLink>
+                {user
+                    ?
+                    <NavLink to={accountPath}
+                             className={({isActive}) =>
+                                 `${styles.navItem} 
+                             ${isActive ? styles.activeLink : ''}`}
+                             onClick={() => navigate(accountPath)}
+                    >
+                        Account
+                    </NavLink>
+                    : <NavLink to='login'
+                               className={({isActive}) =>
+                                   `${styles.navItem} 
+                             ${isActive ? styles.activeLink : ''}`}>
+                        LogIn
+                    </NavLink>
+                }
                 <li>
                     <ThemeToggle/>
                 </li>

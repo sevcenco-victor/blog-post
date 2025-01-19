@@ -1,0 +1,19 @@
+@use '../../styles/media' as m;
+
+.sectionRecentPosts {
+
+  .content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--column-gap);
+    row-gap: var(--row-gap);
+
+    @include m.tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include m.mobile {
+      grid-template-columns:  1fr;
+    }
+  }
+}

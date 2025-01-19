@@ -1,6 +1,6 @@
-using BlogPost.Application.Contracts.User;
+using BlogPost.Application.Users.Commands.CreateUser;
 using BlogPost.Application.Users.Commands.UpdateUser;
-using BlogPost.Domain.Entities;
+using BlogPost.Application.Users.Queries.Common;
 using BlogPost.Domain.Users;
 
 namespace BlogPost.Application.Mapper;

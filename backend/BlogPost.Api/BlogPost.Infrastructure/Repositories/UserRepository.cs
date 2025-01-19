@@ -1,4 +1,3 @@
-using BlogPost.Domain.Abstractions;
 using BlogPost.Domain.Users;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +16,16 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<int> CreateAsync(User entity, CancellationToken cancellationToken)
+    public async Task<Guid> CreateAsync(User entity, CancellationToken cancellationToken)
     {
+        entity.Id = Guid.NewGuid();
         await _dbContext.Users.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
     }
 
-    public async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Users
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -54,7 +54,7 @@ public class UserRepository : IUserRepository
         return affectedRows > 0;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var affectedRows = await _dbContext.Users
             .Where(x => x.Id == id)

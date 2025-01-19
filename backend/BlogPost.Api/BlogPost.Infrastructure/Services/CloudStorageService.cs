@@ -10,11 +10,11 @@ namespace BlogPost.Infrastructure.Services;
 
 public class CloudStorageService : ICloudStorageService
 {
-    private readonly IOptions<GCSConfigOptions> _options;
+    private readonly IOptions<GcsSettings> _options;
     private readonly ILogger<CloudStorageService> _logger;
     private readonly GoogleCredential _credential;
 
-    public CloudStorageService(IOptions<GCSConfigOptions> options, ILogger<CloudStorageService> logger)
+    public CloudStorageService(IOptions<GcsSettings> options, ILogger<CloudStorageService> logger)
     {
         _options = options;
         _logger = logger;

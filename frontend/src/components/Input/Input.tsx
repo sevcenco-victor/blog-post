@@ -1,6 +1,6 @@
 import {InputProps} from "@/types";
 
-export const TextInput = ({name, onChange, ...rest}: InputProps) => {
+export const Input = ({name, onChange, ...rest}: InputProps) => {
     return (
         <input type={"text"}
                name={name}
@@ -10,4 +10,4 @@ export const TextInput = ({name, onChange, ...rest}: InputProps) => {
     );
 };
 
-export default TextInput;
+export default Input;

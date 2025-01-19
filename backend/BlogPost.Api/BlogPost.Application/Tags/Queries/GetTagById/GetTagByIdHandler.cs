@@ -1,8 +1,7 @@
 using BlogPost.Application.Mapper;
 using BlogPost.Application.Tags.Common;
-using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Tags;
 using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTagById;

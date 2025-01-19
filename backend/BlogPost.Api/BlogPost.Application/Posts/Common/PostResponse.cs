@@ -1,8 +1,8 @@
 
-namespace BlogPost.Application.Contracts.Post;
+namespace BlogPost.Application.Posts.Common;
 
 public record PostResponse(
-    int Id,
+    Guid Id,
     string Title,
     string Text,
     DateOnly PostDate,

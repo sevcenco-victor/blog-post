@@ -12,8 +12,8 @@ const About = lazy(() => import('@/pages/About/About.tsx'));
 const Newsletter = lazy(() => import('@/pages/Newsletter/Newsletter.tsx'));
 const Post = lazy(() => import('@/pages/Post/Post.tsx'));
 const NotFound = lazy(() => import('@/pages/NotFound/NotFound.tsx'));
-const SingIn = lazy(() => import('@/pages/SignIn/SignIn.tsx'));
-const SignUp = lazy(() => import('@/pages/SignUp/SignUp.tsx'));
+const LogIn = lazy(() => import('@/pages/Login/Login.tsx'));
+const Register = lazy(() => import('@/pages/Register/Register.tsx'));
 
 const AppRoutes = () => {
     return (
@@ -28,8 +28,8 @@ const AppRoutes = () => {
                     <Route path="post/:postId" element={<Post/>}/>
                     {AccountRoutes}
                     {AdminRoutes}
-                    <Route path="/sign-in" element={<SingIn/>}/>
-                    <Route path="/sign-up" element={<SignUp/>}/>
+                    <Route path="/login" element={<LogIn/>}/>
+                    <Route path="/register" element={<Register/>}/>
                 </Route>
                 <Route path='*' element={<NotFound/>}/>
             </Routes>

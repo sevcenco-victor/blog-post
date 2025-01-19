@@ -1,1 +1,2 @@
-export {FormLabel} from './FormLabel/FormLabel.tsx';
+export {FormLabel} from './FormLabel.tsx';
+export {Form} from './Form.tsx';

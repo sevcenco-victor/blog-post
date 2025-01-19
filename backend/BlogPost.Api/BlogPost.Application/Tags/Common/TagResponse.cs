@@ -1,3 +1,3 @@
 namespace BlogPost.Application.Tags.Common;
 
-public record TagResponse(int Id, string Name, string Color);
+public record TagResponse(Guid Id, string Name, string Color);

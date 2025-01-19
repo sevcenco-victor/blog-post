@@ -4,4 +4,4 @@ using MediatR;
 
 namespace BlogPost.Application.Tags.Queries.GetTagById;
 
-public sealed record GetTagByIdQuery(int Id) : IRequest<Result<TagResponse>>;
+public sealed record GetTagByIdQuery(Guid Id) : IRequest<Result<TagResponse>>;

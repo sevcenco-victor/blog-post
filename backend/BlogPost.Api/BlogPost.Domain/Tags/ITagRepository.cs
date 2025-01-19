@@ -1,11 +1,10 @@
-using BlogPost.Domain.Entities;
-using BlogPost.Domain.Tags;
+using BlogPost.Domain.Common;
 
-namespace BlogPost.Domain.Abstractions;
+namespace BlogPost.Domain.Tags;
 
-public interface ITagRepository : IRepository<int, Tag>
+public interface ITagRepository : IRepository<Guid, Tag>
 {
-    Task<IEnumerable<Tag>> GetTagsByIdsAsync(IEnumerable<int> tagIds, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Tag>> GetTagsByIdsAsync(IEnumerable<Guid> tagIds, CancellationToken cancellationToken = default);
     Task<Tag?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
-    Task<bool> IsNameUniqueAsync(string name, int excludeTagId, CancellationToken cancellationToken = default);
+    Task<bool> IsNameUniqueAsync(string name, Guid excludeTagId, CancellationToken cancellationToken = default);
 }

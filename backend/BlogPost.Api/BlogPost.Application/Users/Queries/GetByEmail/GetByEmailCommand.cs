@@ -1,6 +1,4 @@
-using BlogPost.Application.Contracts.User;
 using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Exceptions;
 using BlogPost.Domain.Primitives;
 using BlogPost.Domain.Users;
 using MediatR;

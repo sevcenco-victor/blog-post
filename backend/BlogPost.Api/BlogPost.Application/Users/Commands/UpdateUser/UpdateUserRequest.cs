@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BlogPost.Application.Users.Commands.UpdateUser;
 
-public record UpdateUserRequest(int Id, string Username, string Email);
+public record UpdateUserRequest(Guid Id, string Username, string Email);

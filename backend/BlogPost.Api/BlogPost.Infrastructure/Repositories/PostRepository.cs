@@ -1,6 +1,6 @@
-using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Entities;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Tags;
+using BlogPost.Domain.Users;
 using BlogPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,19 +16,26 @@ public class PostRepository : IPostRepository
     }
 
 
-    public async Task<int> CreateAsync(Post entity, CancellationToken cancellationToken)
+    public async Task<Guid> CreateAsync(Post entity, CancellationToken cancellationToken)
     {
+        entity.Id = Guid.NewGuid();
+        foreach (var tag in entity.Tags)
+        {
+            _dbContext.Entry(tag).State = EntityState.Unchanged;
+        }
+
         await _dbContext.Posts.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
     }
 
-    public async Task<Post?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Post?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var post = await _dbContext.Posts
             .AsNoTracking()
             .Include<Post, ICollection<Tag>>(p => p.Tags)
+            .Include<Post, User>(x => x.User)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return post;
@@ -56,7 +63,7 @@ public class PostRepository : IPostRepository
         return rowsAffected > 0;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var affectedRows = await _dbContext.Posts
             .Where(b => b.Id == id)
@@ -65,13 +72,19 @@ public class PostRepository : IPostRepository
         return affectedRows > 0;
     }
 
-    public async Task<IEnumerable<Post>> GetPaginatedAsync(int pageNum, int pageSize, string? title, int[]? tagIds,
+    public async Task<IEnumerable<Post>> GetPaginatedAsync(Guid? userId, int pageNum, int pageSize, string? title,
+        Guid[]? tagIds,
         CancellationToken cancellationToken)
     {
         var query = _dbContext.Posts
             .AsNoTracking()
             .Include(p => p.Tags)
             .AsQueryable();
+
+        if (userId != null)
+        {
+            query = query.Where(b => b.UserId == userId);
+        }
 
         if (tagIds != null)
         {
@@ -98,7 +111,7 @@ public class PostRepository : IPostRepository
             .FirstAsync(b => b.PostDate == date, cancellationToken);
     }
 
-    public async Task SetTagsAsync(int postId, IEnumerable<Tag> tags, CancellationToken cancellationToken)
+    public async Task SetTagsAsync(Guid postId, IEnumerable<Tag> tags, CancellationToken cancellationToken)
     {
         var post = await _dbContext.Posts
             .Include(p => p.Tags)

@@ -1,12 +1,15 @@
-namespace BlogPost.Application.Contracts.Post;
+using BlogPost.Domain.Tags;
+
+namespace BlogPost.Application.Posts.Queries.GetPostById;
 
 public record DetailedPostResponse(
-    int Id,
+    Guid Id,
     string Title,
     string Text,
     DateOnly PostDate,
     DateTime LastEdit,
     string ImageUrl,
     string MarkDownFileLink,
-    IEnumerable<Domain.Tags.Tag> Tags
+    IEnumerable<Tag> Tags,
+    string AuthorUsername
 );

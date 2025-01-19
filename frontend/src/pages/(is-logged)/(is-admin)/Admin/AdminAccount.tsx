@@ -1,7 +1,9 @@
 import {Outlet} from "react-router";
 import {MenuBar, MenuBarGroup, MenuBarItem} from "@components/MenuBar";
+import {useAuth} from "@/hooks/useAuth.tsx";
 
 export const AdminAccount = () => {
+    const {logout} = useAuth();
     return (
         <div className={'account-layout'}>
             <MenuBar>
@@ -18,7 +20,7 @@ export const AdminAccount = () => {
                 </MenuBarGroup>
                 <MenuBarGroup groupName={'SUPPORT'}>
                     <MenuBarItem to={'help'} text={'Help'}/>
-                    <MenuBarItem to={'/logout'} text={'Log Out'}/>
+                    <MenuBarItem to={'#'} onClick={() => logout()} text={'Log Out'}/>
                 </MenuBarGroup>
             </MenuBar>
             <Outlet/>

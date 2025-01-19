@@ -1,5 +1,7 @@
 using BlogPost.Application.Abstractions;
-using BlogPost.Domain.Abstractions;
+using BlogPost.Domain.Posts;
+using BlogPost.Domain.Tags;
+using BlogPost.Domain.Users;
 using BlogPost.Infrastructure.ConfigOptions;
 using BlogPost.Infrastructure.Data;
 using BlogPost.Infrastructure.Repositories;
@@ -20,11 +22,15 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
-        services.Configure<GCSConfigOptions>(configuration);
+        services.Configure<GcsSettings>(configuration);
+        services.Configure<JwtSettings>(configuration.GetSection("JWTSettings"));
         services.AddSingleton<ICloudStorageService, CloudStorageService>();
-
         services.AddSingleton<IFileFactory, FileFactory>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

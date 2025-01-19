@@ -1,17 +1,16 @@
 using BlogPost.Application.Abstractions;
 using BlogPost.Application.Common;
-using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
-using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Tags;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace BlogPost.Application.Posts.Commands.CreatePost;
 
-public sealed class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<int>>
+public sealed class CreatePostHandler : IRequestHandler<CreatePostCommand, Result<Guid>>
 {
     private readonly IPostRepository _postRepository;
     private readonly ITagRepository _tagRepository;
@@ -34,7 +33,7 @@ public sealed class CreatePostHandler : IRequestHandler<CreatePostCommand, Resul
     }
 
 
-    public async Task<Result<int>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request.Post, cancellationToken);
 
@@ -45,7 +44,7 @@ public sealed class CreatePostHandler : IRequestHandler<CreatePostCommand, Resul
             _logger.LogWarning("Validation failed for Post with Title {Title} with Errors: {Errors}",
                 request.Post.Title, error.Errors);
 
-            return Result<int>.Failure(PostErrors.ValidationError(error.Errors.ToString()));
+            return Result<Guid>.Failure(PostErrors.ValidationError(error.Errors.ToString()));
         }
 
         var post = request.Post;
@@ -60,6 +59,6 @@ public sealed class CreatePostHandler : IRequestHandler<CreatePostCommand, Resul
         var createdEntityId = await _postRepository.CreateAsync(mappedEntity, cancellationToken);
 
         _logger.LogInformation("Post created successfully with ID: {Id}", createdEntityId);
-        return Result<int>.Success(createdEntityId);
+        return Result<Guid>.Success(createdEntityId);
     }
 }

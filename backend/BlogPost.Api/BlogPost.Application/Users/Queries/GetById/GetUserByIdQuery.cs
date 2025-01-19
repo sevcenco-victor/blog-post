@@ -4,4 +4,4 @@ using MediatR;
 
 namespace BlogPost.Application.Users.Queries.GetById;
 
-public sealed record GetUserByIdQuery(int UserId) : IRequest<Result<User>>;
+public sealed record GetUserByIdQuery(Guid UserId) : IRequest<Result<User>>;

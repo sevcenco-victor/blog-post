@@ -1,7 +1,7 @@
-using BlogPost.Application.Contracts.User;
 using BlogPost.Application.Mapper;
-using BlogPost.Domain.Abstractions;
+using BlogPost.Application.Users.Queries.Common;
 using BlogPost.Domain.Primitives;
+using BlogPost.Domain.Users;
 using MediatR;
 
 namespace BlogPost.Application.Users.Queries.GetAll;

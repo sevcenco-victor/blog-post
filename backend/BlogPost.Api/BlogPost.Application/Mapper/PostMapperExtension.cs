@@ -1,12 +1,15 @@
 using BlogPost.Application.Contracts.Post;
-using BlogPost.Domain.Entities;
+using BlogPost.Application.Posts.Commands.CreatePost;
+using BlogPost.Application.Posts.Common;
+using BlogPost.Application.Posts.Queries.GetPostById;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Tags;
 
 namespace BlogPost.Application.Mapper;
 
 public static class PostMapperExtension
 {
-    public static Post ToEntity(this CreatePostRequest post, IEnumerable<Tag> tags, string markdownFileName )
+    public static Post ToEntity(this CreatePostRequest post, IEnumerable<Tag> tags, string markdownFileName)
     {
         return new Post()
         {
@@ -17,6 +20,7 @@ public static class PostMapperExtension
             MarkdownFileName = markdownFileName,
             Tags = tags.ToList(),
             ImageUrl = post.ImageUrl,
+            UserId = post.UserId,
         };
     }
 
@@ -41,7 +45,9 @@ public static class PostMapperExtension
             post.LastEdit,
             post.ImageUrl,
             markdownFileLink,
-            post.Tags);
+            post.Tags,
+            post.User.Username
+        );
     }
 
     public static Post ToEntity(this UpdatePostRequest post)

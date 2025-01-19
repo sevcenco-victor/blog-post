@@ -1,0 +1,24 @@
+@use '../../styles/mixins' as *;
+@use '../../styles/media' as m;
+
+.postWrapper {
+  display: grid;
+  grid-template-columns:repeat(2, 1fr);
+  grid-auto-rows: 444px;
+  column-gap: var(--column-gap);
+  row-gap: var(--row-gap);
+
+  overflow: visible !important;
+
+  & :nth-child(3n) {
+    @include span-columns(2);
+  }
+
+  @include m.mobile {
+    grid-template-columns: 1fr;
+
+    & :nth-child(3n) {
+      @include span-columns(1);
+    }
+  }
+}

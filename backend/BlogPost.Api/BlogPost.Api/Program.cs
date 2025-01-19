@@ -11,6 +11,7 @@ builder.Services.AddCors(options =>
     {
         policyBuilder.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
+            .AllowCredentials()
             .AllowAnyMethod();
     });
 });
@@ -18,6 +19,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -29,6 +31,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -36,8 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("blogpost-policy");
-app.UseExceptionHandler();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

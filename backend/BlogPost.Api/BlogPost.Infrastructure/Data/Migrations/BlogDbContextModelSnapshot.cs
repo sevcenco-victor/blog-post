@@ -22,13 +22,11 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BlogPost.Domain.Entities.Post", b =>
+            modelBuilder.Entity("BlogPost.Domain.Posts.Post", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -57,18 +55,21 @@ namespace BlogPost.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("BlogPost.Domain.Tags.Tag", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -89,11 +90,8 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("BlogPost.Domain.Users.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
@@ -114,7 +112,9 @@ namespace BlogPost.Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Role")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -122,16 +122,22 @@ namespace BlogPost.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("PostTag", b =>
                 {
-                    b.Property<int>("BlogsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BlogsId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TagsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("BlogsId", "TagsId");
 
@@ -140,9 +146,20 @@ namespace BlogPost.Infrastructure.Data.Migrations
                     b.ToTable("PostTag");
                 });
 
+            modelBuilder.Entity("BlogPost.Domain.Posts.Post", b =>
+                {
+                    b.HasOne("BlogPost.Domain.Users.User", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PostTag", b =>
                 {
-                    b.HasOne("BlogPost.Domain.Entities.Post", null)
+                    b.HasOne("BlogPost.Domain.Posts.Post", null)
                         .WithMany()
                         .HasForeignKey("BlogsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -153,6 +170,11 @@ namespace BlogPost.Infrastructure.Data.Migrations
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogPost.Domain.Users.User", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

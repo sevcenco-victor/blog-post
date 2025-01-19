@@ -1,8 +1,6 @@
 using BlogPost.Application.Abstractions;
-using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
-using BlogPost.Domain.Abstractions;
-using BlogPost.Domain.Exceptions;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
 using MediatR;
 
@@ -22,7 +20,7 @@ public sealed class GetPostByIdHandler : IRequestHandler<GetPostByIdQuery, Resul
     public async Task<Result<DetailedPostResponse>> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
     {
         var postId = query.Id;
-        var post = await _postRepository.GetByIdAsync(postId,cancellationToken);
+        var post = await _postRepository.GetByIdAsync(postId, cancellationToken);
 
         if (post == null)
         {

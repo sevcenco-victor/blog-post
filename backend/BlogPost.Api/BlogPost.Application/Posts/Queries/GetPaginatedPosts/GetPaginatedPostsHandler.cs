@@ -1,12 +1,14 @@
-using BlogPost.Application.Contracts.Post;
 using BlogPost.Application.Mapper;
+using BlogPost.Application.Posts.Common;
 using BlogPost.Domain.Abstractions;
+using BlogPost.Domain.Posts;
 using BlogPost.Domain.Primitives;
 using MediatR;
 
 namespace BlogPost.Application.Posts.Queries.GetPaginatedPosts;
 
-public sealed class GetPaginatedPostsHandler : IRequestHandler<GetPaginatedPostsQuery, Result<IEnumerable<PostResponse>>>
+public sealed class
+    GetPaginatedPostsHandler : IRequestHandler<GetPaginatedPostsQuery, Result<IEnumerable<PostResponse>>>
 {
     private readonly IPostRepository _postRepository;
 
@@ -26,7 +28,9 @@ public sealed class GetPaginatedPostsHandler : IRequestHandler<GetPaginatedPosts
                 "PageNumber and PageSize must be greater than 0"));
         }
 
-        var entities = await _postRepository.GetPaginatedAsync(pageNumber, pageSize, title, tagIds, cancellationToken);
+        var entities =
+            await _postRepository.GetPaginatedAsync(request.UserId, pageNumber, pageSize, title, tagIds,
+                cancellationToken);
         var mappedPosts = entities.Select(p => p.ToPostResponseDto());
 
         return Result<IEnumerable<PostResponse>>.Success(mappedPosts);
