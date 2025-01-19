@@ -5,5 +5,6 @@ public record CreatePostRequest(
     string Text,
     string ImageUrl,
     string MarkdownFileContent,
-    IEnumerable<Guid> TagIds
+    IEnumerable<Guid> TagIds,
+    Guid UserId
 );
