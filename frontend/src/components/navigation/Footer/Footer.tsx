@@ -6,7 +6,7 @@ export const Footer = () => {
         <footer className={styles.footer}>
             <ul className={styles.list}>
                 <li className={styles.listItem}>
-                    <Link to={'#'}>© 2025</Link>
+                    © 2025
                 </li>
                 <li className={styles.listItem}>
                     <Link to={'#'}>Twitter</Link>
