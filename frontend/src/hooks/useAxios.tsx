@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {AxiosError} from "axios";
+import {useErrorBoundary} from "react-error-boundary";
 
 type UseAxiosReturn<T, U> = {
     data: T | null;
@@ -13,6 +13,7 @@ export const useAxios = <T, U>(axiosFunction: (...args: U[]) => Promise<T>): Use
         const [data, setData] = useState<T | null>(null);
         const [isLoading, setIsLoading] = useState<boolean>(false);
         const [error, setError] = useState<string | null>(null);
+        const {showBoundary} = useErrorBoundary();
 
         const execute = useCallback(
             async (...args: U[]) => {
@@ -22,15 +23,7 @@ export const useAxios = <T, U>(axiosFunction: (...args: U[]) => Promise<T>): Use
                     const result = await axiosFunction(...args);
                     setData(result);
                 } catch (error) {
-                    if (error instanceof AxiosError) {
-                        if (error.status === 404) {
-                            setError("Not Found");
-                        } else {
-                            setError(error.message);
-                        }
-                    } else {
-                        setError("An error occurred");
-                    }
+                    showBoundary(error);
                 } finally {
                     setIsLoading(false);
                 }
