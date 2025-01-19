@@ -1,12 +1,16 @@
-.section-about-me {
-  &__content {
+.sectionAboutMe {
+  .img {
+    width: 100%;
+  }
+
+  .content {
     display: flex;
     flex-direction: column;
     row-gap: var(--row-gap);
   }
 }
 
-.content__item {
+.contentItem {
   display: flex;
   flex-direction: column;
   row-gap: 12px;
