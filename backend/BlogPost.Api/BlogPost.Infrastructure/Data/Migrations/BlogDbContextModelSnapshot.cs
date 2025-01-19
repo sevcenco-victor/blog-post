@@ -55,7 +55,12 @@ namespace BlogPost.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -86,7 +91,6 @@ namespace BlogPost.Infrastructure.Data.Migrations
             modelBuilder.Entity("BlogPost.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateOnly>("BirthDate")
@@ -110,7 +114,7 @@ namespace BlogPost.Infrastructure.Data.Migrations
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasDefaultValue(1);
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -142,6 +146,17 @@ namespace BlogPost.Infrastructure.Data.Migrations
                     b.ToTable("PostTag");
                 });
 
+            modelBuilder.Entity("BlogPost.Domain.Posts.Post", b =>
+                {
+                    b.HasOne("BlogPost.Domain.Users.User", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PostTag", b =>
                 {
                     b.HasOne("BlogPost.Domain.Posts.Post", null)
@@ -155,6 +170,11 @@ namespace BlogPost.Infrastructure.Data.Migrations
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogPost.Domain.Users.User", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

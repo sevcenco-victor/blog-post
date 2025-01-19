@@ -51,7 +51,8 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
             _jwtTokenService.GenerateToken(userEntity),
             _jwtTokenService.GenerateRefreshToken()
         );
-
+        
+        userEntity.Role = UserRoles.User;
         userEntity.RefreshToken = tokenResponse.RefreshToken;
         userEntity.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 

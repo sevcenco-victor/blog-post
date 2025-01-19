@@ -32,5 +32,9 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
 
         builder.HasMany(b => b.Tags)
             .WithMany(t => t.Blogs);
+
+        builder.HasOne(x => x.User)
+            .WithMany(p => p.Posts)
+            .HasForeignKey(x => x.UserId);
     }
 }
