@@ -1,0 +1,52 @@
+.errorFallback {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  color: var(--font-color);
+}
+
+.errorGhost {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  svg {
+    animation: floatingAnim 1s infinite alternate ease-in-out;
+  }
+}
+
+.ghostShadow {
+  height: 1rem;
+  width: 132px;
+  border-radius: 50%;
+  background-color: var(--font-color);
+  opacity: 0.3;
+  animation: shadowAnim 1s infinite alternate ease-in-out;
+}
+
+@keyframes floatingAnim {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(5%);
+  }
+}
+
+@keyframes shadowAnim {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.errorText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
