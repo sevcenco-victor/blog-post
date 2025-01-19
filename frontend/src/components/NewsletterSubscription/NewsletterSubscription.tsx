@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
-import {Button} from "@components";
-import {TextInput} from "@components/Inputs";
+import {Button, Input} from "@components";
 import styles from './NewsletterSubscription.module.scss';
 
 
@@ -19,8 +18,8 @@ export const NewsletterSubscription = () => {
             <p className={`${styles.description}`}>Subscribe to learn about new product features, the
                 latest in technology, solutions, and updates.</p>
             <div className={styles.form}>
-                <TextInput name={'userEmail'} onChange={(e) => setUserEmail(e.target.value)}
-                           placeholder={'Enter your email'}/>
+                <Input name={'userEmail'} onChange={(e) => setUserEmail(e.target.value)}
+                       placeholder={'Enter your email'}/>
                 <Button text={'Subscribe'} onClick={handleOnClick}/>
                 <p>We care about your data in our <Link to="/privacy-policy">privacy policy</Link></p>
             </div>
