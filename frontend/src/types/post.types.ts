@@ -3,7 +3,7 @@ import {TagTypes} from "@/types";
 export type Post = {
     id: number;
     title: string;
-    text: string;
+    subText: string;
     imageUrl: string;
     postDate: string;
     lastEdit: string;
@@ -21,10 +21,10 @@ export type DetailedPost = Post & {
     authorUsername: string;
 }
 
-export type CreatePostRequest = Pick<Post, 'title' | 'text' | 'imageUrl'> & {
+export type CreatePostRequest = Pick<Post, 'title' | 'subText' | 'imageUrl'> & {
     userId: string,
     markdownFileContent: string,
-    tagIds: number[]
+    tagIds: string[]
 }
 
 export type GetPaginatedPostRequest = {

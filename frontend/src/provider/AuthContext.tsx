@@ -1,7 +1,7 @@
 import {createContext, PropsWithChildren, useState} from "react";
 import axiosInstance, {setAxiosLogout} from "@/apis/axiosInstance.ts";
 import {decodeJwt} from "@/utils/decodeJwt.ts";
-import {User, AuthContextType, LoginForm, RegisterForm} from "@/types";
+import {User, AuthContextType, LogInForm, RegisterForm} from "@/types";
 import {useNavigate} from "react-router-dom";
 
 
@@ -11,7 +11,7 @@ export const AuthProvider = ({children}: PropsWithChildren) => {
     const [user, setUser] = useState<User | null>(decodeJwt(localStorage.getItem('token') || ''));
     const navigate = useNavigate();
 
-    const login = async (formData: LoginForm) => {
+    const login = async (formData: LogInForm) => {
         try {
             const res = await axiosInstance.post('/auth/login', formData);
 
