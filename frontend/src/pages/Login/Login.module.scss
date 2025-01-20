@@ -17,7 +17,7 @@
   }
 
   .content {
-    min-width: 388px;
+    width: 388px;
     height: min-content;
 
     display: flex;
@@ -26,7 +26,8 @@
     justify-self: center;
 
     @include m.tablet {
-      min-width: unset;
+      max-width: 400px;
+      width: unset;
     }
 
     .header {

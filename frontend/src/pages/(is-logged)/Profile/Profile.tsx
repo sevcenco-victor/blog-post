@@ -1,35 +1,95 @@
-import {ChangeEvent, FormEvent, useState} from "react";
-import {Button} from "@components";
+import {useEffect} from "react";
+import {useForm} from "react-hook-form";
+import {z} from 'zod';
+import {Button, Loader} from "@components";
 import {FormLabel, Form} from "@components/Form";
-import {Input} from "@components/Input";
-import styles from './Profile.module.scss';
+import {useAxios} from "@/hooks/useAxios.tsx";
+import {UserResponse} from "@/types";
+import {getUserById} from "@/apis/userRequests.ts";
+import {useAuth} from "@/hooks/useAuth.tsx";
+import {zodResolver} from "@hookform/resolvers/zod";
+
+const ProfileSchema = z.object({
+    username: z.string().min(5, "Username must have at least 5 characters"),
+    email: z.string().email(),
+    birthday: z.string().date(),
+});
+type FormFields = z.infer<typeof ProfileSchema>;
 
 export const Profile = () => {
-    const [form, setForm] = useState({
-        username: '',
-        email: '',
-    })
-    const handleFormSubmit = (e: FormEvent) => {
-        e.preventDefault();
+    const {
+        data,
+        isLoading,
+        error,
+        execute: executeGetUserById,
+    } = useAxios<UserResponse, string>(getUserById)
+    const {user} = useAuth();
+    const {
+        register,
+        setError,
+        setValue,
+        handleSubmit,
+        formState: {errors, isSubmitting}
+    } = useForm<FormFields>(
+        {
+            resolver: zodResolver(ProfileSchema),
+        }
+    )
 
-        console.log("handleFormSubmit", form);
+    const onSubmit = (data: FormFields) => {
+
+        console.log("onSubmit", data);
     }
-    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-        setForm(prevState => ({...prevState, [name]: value}));
+
+    useEffect(() => {
+        if (user) {
+            executeGetUserById(user.id).then();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (data !== null) {
+            setValue("username", data.username);
+            setValue("email", data.email);
+            setValue("birthday", data.birthday);
+        }
+    }, [data]);
+
+    if (isLoading) {
+        return <Loader/>
     }
+    if (error) {
+        return <p className="error">{error}</p>
+    }
+
     return (
         <div>
             <h2>Profile</h2>
-            <Form onSubmit={handleFormSubmit}>
+            <Form onSubmit={handleSubmit(onSubmit)}>
                 <FormLabel text={"Username"}>
-                    <Input name="username" value={form.username} onChange={handleOnChange} autoComplete={"username"}/>
+                    <input
+                        {...register("username")}
+                        placeholder={"user_name33"}
+                        autoComplete={"username"}/>
+                    {errors.username && (<span className={'input-error'}>{errors.username.message}</span>)}
                 </FormLabel>
                 <FormLabel text={"Email"}>
-                    <Input name="email" type={'email'} value={form.email} onChange={handleOnChange}
-                           autoComplete={"email"}/>
+                    <input
+                        {...register("email")}
+                        type={'email'}
+                        placeholder={"example@gmail.com"}
+                        autoComplete={"email"}/>
+                    {errors.email && (<span className={'input-error'}>{errors.email.message}</span>)}
                 </FormLabel>
-                <Button type="submit" text={"Save"}/>
+                <FormLabel text={"Birth Date"}>
+                    <input
+                        {...register('birthday')}
+                        type={'date'}/>
+                    {errors.birthday && (<span className={'input-error'}>{errors.birthday.message}</span>)}
+                </FormLabel>
+                <Button type="submit"
+                        disabled={isSubmitting}
+                        text={isSubmitting ? "Loading..." : "Submit"}/>
             </Form>
         </div>
     );

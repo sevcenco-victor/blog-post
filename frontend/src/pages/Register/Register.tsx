@@ -1,26 +1,38 @@
-import styles from "@/pages/Login/Login.module.scss";
-import {FormLabel} from "@components/Form";
+import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {Button,Input} from "@components";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from 'zod';
+import {Button} from "@components";
+import {Form, FormLabel} from "@components/Form";
 import {useAuth} from "@/hooks/useAuth.tsx";
+import {zodResolver} from "@hookform/resolvers/zod";
+import styles from "@/pages/Login/Login.module.scss";
+
+const formSchema = z.object({
+    username: z.string().min(5, "Username must be at least 5 characters"),
+    email: z.string().email(),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+})
+
+type FormFields = z.infer<typeof formSchema>;
 
 export const Register = () => {
-    const {register} = useAuth();
+    const {register: registerUser} = useAuth();
     const navigate = useNavigate();
-
+    const {
+        register,
+        handleSubmit,
+        formState: {errors, isSubmitting},
+    } = useForm<FormFields>(
+        {
+            resolver: zodResolver(formSchema)
+        }
+    )
     const [error, setError] = useState<string | null>(null);
-    const [form, setForm] = useState({
-        username: "",
-        email: "",
-        password: "",
-    });
 
-
-    const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onSubmit = async (data: FormFields) => {
         try {
-            await register(form);
+            await registerUser(data);
             navigate("/login");
         } catch (error) {
             console.log(error);
@@ -31,13 +43,7 @@ export const Register = () => {
             setError(composedError);
         }
     }
-    const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target;
-        setForm(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    }
+
     return (
         <div className={styles.signIn}>
             <div className={styles.content}>
@@ -48,25 +54,34 @@ export const Register = () => {
                     {error && (<p className={'error'}>{error}</p>)}
                 </div>
 
-                <form onSubmit={handleFormSubmit} className={styles.form}>
+                <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <FormLabel text={"Username"}>
-                        <Input name="username" placeholder={'example'}
-                               type={'text'}
-                               autoComplete={"username"}
-                               onChange={handleOnChange}/>
+                        <input
+                            {...register('username')}
+                            placeholder={'user123'}
+                            type={'text'}
+                            autoComplete={"username"}/>
+                        {errors.username && (<span className={'input-error'}>{errors.username.message}</span>)}
                     </FormLabel>
                     <FormLabel text={"Email"}>
-                        <Input name="email" placeholder={'example@gmail.com'}
-                               type={'email'}
-                               autoComplete={"email"}
-                               onChange={handleOnChange}/>
+                        <input
+                            {...register("email")}
+                            placeholder={'example@gmail.com'}
+                            type={'email'}
+                            autoComplete={"email"}/>
+                        {errors.email && (<span className={'input-error'}>{errors.email.message}</span>)}
+
                     </FormLabel>
                     <FormLabel text={"Password"}>
-                        <Input name="password" type={'password'} placeholder={'super strong pass'}
-                               autoComplete="current-password" onChange={handleOnChange}/>
+                        <input {...register("password")}
+                               type={'password'}
+                               placeholder={'super strong pass'}
+                               autoComplete="current-password"/>
+                        {errors.password && (<span className={'input-error'}>{errors.password.message}</span>)}
+
                     </FormLabel>
-                    <Button type="submit" text={"Sign in"}/>
-                </form>
+                    <Button type="submit" disabled={isSubmitting} text={isSubmitting ? "Loading..." : "Sign in"}/>
+                </Form>
                 <p className={styles.signUpCall}>Already have an account? <Link to={'/login'}>Log In</Link></p>
             </div>
             <img

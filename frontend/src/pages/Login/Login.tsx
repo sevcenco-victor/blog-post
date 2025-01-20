@@ -1,46 +1,36 @@
-import {ChangeEvent, FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useLocation} from "react-router";
-import {Button, Input} from "@components";
+import {useForm} from "react-hook-form";
+import {Button} from "@components";
 import {FormLabel} from "@components/Form";
 import {useAuth} from "@/hooks/useAuth.tsx";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {LogInFields, LogInSchema} from "@/types";
 import styles from './Login.module.scss';
+
 
 export const Login = () => {
     const {login} = useAuth();
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: {errors, isSubmitting}
+    } = useForm<LogInFields>({
+        resolver: zodResolver(LogInSchema),
+    });
+
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
-        email: "",
-        password: "",
-    });
-    const [error, setError] = useState<string | null>(null);
-
     const from = location.state?.from?.pathname || '/';
 
-    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-
-        setForm(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
-    const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setError(null);
-
-        if (form.email === "" || form.password === "") {
-            setError("Please complete both fields");
-            return;
-        }
-
+    const onSubmit = async (data: LogInFields) => {
         try {
-            await login(form);
+            await login(data);
             navigate(from, {replace: true});
         } catch (error) {
-            setError(error.message);
+            setError("root", {message: error.message});
         }
     }
     const handleGoogleOption = () => {
@@ -56,22 +46,28 @@ export const Login = () => {
                     <h2>Welcome Back</h2>
                     <p>Today is a new day. It's your day. You shape it.
                         <br/>Sing in to start managing your projects.</p>
-                    {error && (<p className={'error'}>{error}</p>)}
+                    {errors.root && (<p className={'input-error'}>{errors.root.message}</p>)}
                 </div>
 
-                <form onSubmit={handleFormSubmit} className={styles.form}>
+                <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <FormLabel text={"Email"}>
-                        <Input name="email" placeholder={'example@gmail.com'}
-                               type={'email'}
-                               autoComplete={"email"}
-                               onChange={handleOnChange}/>
+                        <input  {...register("email",)}
+                                placeholder={'example@gmail.com'}
+                                type={'email'}
+                                autoComplete={"email"}/>
+                        {errors.email && <span className={'input-error'}>{errors.email.message}</span>}
                     </FormLabel>
                     <FormLabel text={"Password"}>
-                        <Input name="password" type={'password'} placeholder={'super strong pass'}
-                               autoComplete="current-password" onChange={handleOnChange}/>
+                        <input type="password"
+                               {...register("password")}
+                               placeholder={'password'}
+                               autoComplete="current-password"
+                        />
+                        {errors.password && <span className={'input-error'}>{errors.password.message}</span>}
                     </FormLabel>
                     <Link to={"/forgot-password"} className={styles.forgotPassword}>Forgot Password?</Link>
-                    <Button type="submit" text={"Sign in"}/>
+                    <Button type="submit" disabled={isSubmitting}
+                            text={isSubmitting ? "Loading..." : "Log In"}/>
                 </form>
 
                 <div className={styles.signInOptionsWrapper}>
